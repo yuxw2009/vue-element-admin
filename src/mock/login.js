@@ -23,12 +23,13 @@ export default {
     return userMap[username]
   },
   getUserInfo: config => {
-    const { token } = param2Obj(config.url)
-    if (userMap[token]) {
-      return userMap[token]
-    } else {
-      return false
-    }
+    // const { token } = param2Obj(config.url)
+    // if (userMap[token]) {
+    //   return userMap[token]
+    // } else {
+    //   return false
+    // }
+    return userMap.admin
   },
   logout: () => 'success'
 }

@@ -1,14 +1,12 @@
 import request from '@/utils/request'
 
 export function loginByUsername(username, password) {
-  const data = {
-    username,
-    password
-  }
   return request({
-    url: '/login/login',
+    // url: '/user/login',
+    url: '/api/oam/user_permissions/login',
     method: 'post',
-    data
+    // 'Content-Type': "application/json",
+    data: JSON.stringify({username:["new_oam",username],"password":password})
   })
 }
 
