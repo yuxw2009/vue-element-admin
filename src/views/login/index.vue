@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
         <h3 class="title">
-           朴道水汇 
+          朴道水汇
         </h3>
         <lang-select class="set-language" />
       </div>
@@ -14,7 +14,7 @@
         </span>
         <el-input
           v-model="loginForm.username"
-          :placeholder="$t('login.username')"
+          placeholder="请输入用户名"
           name="username"
           type="text"
           auto-complete="on"
@@ -28,7 +28,7 @@
         <el-input
           v-model="loginForm.password"
           :type="passwordType"
-          :placeholder="$t('login.password')"
+          placeholder="请输入正确的密码"
           name="password"
           auto-complete="on"
           @keyup.enter.native="handleLogin"
@@ -49,7 +49,7 @@
 import { validUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
-
+import Cookies from 'js-cookie'
 export default {
   name: 'Login',
   components: { LangSelect, SocialSign },
@@ -110,14 +110,13 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then((res) => {
+            Cookies.set('userData', res.data.result)
             this.loading = false
-            this.$router.go(0)
-            Cookies.set('userData', response.data.result)
             this.$router.push({ path: '/' })
-
           }).catch(() => {
+            console.log('llll')
             this.loading = false
-          }) 
+          })
         } else {
           console.log('error submit!!')
           return false

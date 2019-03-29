@@ -1,6 +1,6 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-
+import Cookies from 'js-cookie'
 const user = {
   state: {
     user: '',
@@ -47,11 +47,15 @@ const user = {
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
       const username = userInfo.username.trim()
+
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
+          data.token = '%25hjdnjff45g2'
+
+          Cookies.set('userData', data.result)
           commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
+          setToken(data.token)
           resolve(response)
         }).catch(error => {
           reject(error)

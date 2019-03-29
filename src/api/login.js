@@ -6,7 +6,7 @@ export function loginByUsername(username, password) {
     url: '/api/oam/user_permissions/login',
     method: 'post',
     // 'Content-Type': "application/json",
-    data: JSON.stringify({username:["new_oam",username],"password":password})
+    data: JSON.stringify({ username: ['new_oam', username], 'password': password })
   })
 }
 

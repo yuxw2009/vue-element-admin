@@ -9,17 +9,17 @@ import { fetchList } from '@/api/article'
 import Sortable from 'sortablejs'
 
 export default {
- 
+
   data() {
     return {
-    
+
     }
   },
   created() {
     this.getList()
   },
   methods: {
-   
+
   }
 }
 </script>
