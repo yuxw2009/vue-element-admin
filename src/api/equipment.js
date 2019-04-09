@@ -1,10 +1,10 @@
-import request from '@/utils/request'
+import request1 from '@/utils/request1'
 
 export function getEquipmentList(query) {
-  return request({
+  return request1({
+    // baseURL: 'http://192.168.1.13:8765/',
     // url: 'pdeEquipment/page',
     // baseURL: 'http://inner.x9water.com/',
-    baseURL: 'http://139.196.83.31/',
     url: 'api/pudow-service-erp/pdeEquipment/page',
     method: 'post',
     data: query,
@@ -28,16 +28,15 @@ export function getEquipmentList(query) {
 }
 
 export function getFilterList(query) {
-  return request({
+  return request1({
     // baseURL: 'http://inner.x9water.com/',
-    baseURL: 'http://139.196.83.31/',
     url: 'api/pudow-service-equipment/equipment/getFiltersByEquipmentNos',
     method: 'post',
     data: query,
     transformRequest: [function(data) {
       // Do whatever you want to transform the data
       let ret = ''
-      for (const it in data) {
+      for (it in data) {
         // console.log(encodeURIComponent(it),encodeURIComponent(data[it]))
         ret += it + '=' + data[it] + '&'
       }
@@ -50,9 +49,8 @@ export function getFilterList(query) {
 }
 
 export function getDayUseList(query) {
-  return request({
+  return request1({
     // baseURL: 'http://inner.x9water.com/',
-    baseURL: 'http://139.196.83.31/',
     url: 'api/pudow-service-flow/flow/getDayFlowByEquipmentNo',
     method: 'post',
     data: query,
@@ -72,9 +70,8 @@ export function getDayUseList(query) {
 }
 
 export function getEveryUseList(query) {
-  return request({
+  return request1({
     // baseURL: 'http://inner.x9water.com/',
-    baseURL: 'http://139.196.83.31/',
     url: 'api/pudow-service-flow/flow/getEveryFlowByEquipmentNo',
     method: 'post',
     data: query,
@@ -94,9 +91,7 @@ export function getEveryUseList(query) {
 }
 
 export function getEquipmentDetail(query) {
-  return request({
-    // baseURL: 'http://inner.x9water.com/',
-    baseURL: 'http://139.196.83.31/',
+  return request1({
     url: 'api/pudow-service-flow/flow/getStateInfoByEquipmentNos',
     method: 'post',
     data: query,

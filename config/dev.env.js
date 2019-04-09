@@ -1,8 +1,6 @@
-'use strict'
-const merge = require('webpack-merge')
-const prodEnv = require('./prod.env')
-
-module.exports = merge(prodEnv, {
+module.exports = {
     NODE_ENV: '"development"',
-    BASE_API: '"http://priv.x9water.com:18080/"', //正式环境
-})
+    ENV_CONFIG: '"dev"',
+    BASE_API: '"http://priv.x9water.com:18080/"', //测试环境
+    BASE_API1: '"http://192.168.1.14/"'
+}

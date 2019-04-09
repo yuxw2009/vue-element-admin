@@ -1,10 +1,12 @@
 export default {
   route: {
+    permission: '列表信息',
+    accountManage: '账户信息',
+    equipmentManage: '设备信息',
     dashboard: 'Dashboard',
     introduction: 'Introduction',
     documentation: 'Documentation',
     guide: 'Guide',
-    permission: 'Permission',
     pagePermission: 'Page Permission',
     rolePermission: 'Role Permission',
     directivePermission: 'Directive Permission',

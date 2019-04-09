@@ -1,5 +1,8 @@
-'use strict'
 module.exports = {
-  NODE_ENV: '"production"',
-  BASE_API: '"http://interface.x9water.com:8080/"',
+    NODE_ENV: '"production"',
+    ENV_CONFIG: '"prod"',
+    // BASE_API: '"http://interface.x9water.com:8080/"', //正式打包环境
+    // BASE_API1: '"http://inner.x9water.com/"'
+    BASE_API: '"http://priv.x9water.com:18080/"', //测试打包环境
+    BASE_API1: '"http://192.168.1.14/"'
 }

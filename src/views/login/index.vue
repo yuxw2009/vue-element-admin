@@ -1,11 +1,10 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <el-form ref="loginForm" :model="loginForm" class="login-form" auto-complete="on" label-position="left">
       <div class="title-container">
         <h3 class="title">
-          朴道水汇
+          系统登录
         </h3>
-        <lang-select class="set-language" />
       </div>
 
       <el-form-item prop="username">
@@ -28,7 +27,7 @@
         <el-input
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="请输入正确的密码"
+          placeholder="请输入密码"
           name="password"
           auto-complete="on"
           @keyup.enter.native="handleLogin"
@@ -39,9 +38,18 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
-        登录
+        {{ $t('login.logIn') }}
       </el-button>
+
     </el-form>
+
+    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
+      {{ $t('login.thirdpartyTips') }}
+      <br>
+      <br>
+      <br>
+      <social-sign />
+    </el-dialog>
   </div>
 </template>
 
@@ -49,7 +57,7 @@
 import { validUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
-import Cookies from 'js-cookie'
+
 export default {
   name: 'Login',
   components: { LangSelect, SocialSign },
@@ -108,14 +116,9 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then((res) => {
-            Cookies.set('userData', res.data.result)
-            this.loading = false
-            this.$router.push({ path: '/' })
+          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+            this.$router.push({ path: this.redirect || '/' })
           }).catch(() => {
-            console.log('llll')
-            this.loading = false
           })
         } else {
           console.log('error submit!!')
@@ -178,7 +181,7 @@ export default {
         height: 47px;
         caret-color: $cursor;
         &:-webkit-autofill {
-          -webkit-box-shadow: 0 0 0px 1000px $bg inset !important;
+          box-shadow: 0 0 0px 1000px $bg inset !important;
           -webkit-text-fill-color: $cursor !important;
         }
       }

@@ -1,11 +1,10 @@
 <template>
   <div v-if="!item.hidden" class="menu-wrapper">
 
-    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren)&&!item.alwaysShow">
-      <app-link :to="resolvePath(onlyOneChild.path)">
+    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
+      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item v-if="onlyOneChild.meta" :icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)" :title="generateTitle(onlyOneChild.meta.title)" />
-          <!-- <item :icon="(item.meta&&item.meta.icon)" :title="generateTitle(item.meta.title)" /> -->
+          <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="generateTitle(onlyOneChild.meta.title)" />
         </el-menu-item>
       </app-link>
     </template>
@@ -30,7 +29,7 @@
 <script>
 import path from 'path'
 import { generateTitle } from '@/utils/i18n'
-import { isExternal } from '@/utils/validate' // 路由跳转的
+import { isExternal } from '@/utils/validate'
 import Item from './Item'
 import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
@@ -57,7 +56,7 @@ export default {
   data() {
     // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
     // TODO: refactor with render function
-    // this.onlyOneChild = null
+    this.onlyOneChild = null
     return {}
   },
   methods: {
@@ -66,7 +65,7 @@ export default {
         if (item.hidden) {
           return false
         } else {
-          // 只有一个显示子路由时使用
+          // Temp set(will be used if only has one showing child)
           this.onlyOneChild = item
           return true
         }
@@ -76,7 +75,8 @@ export default {
       if (showingChildren.length === 1) {
         return true
       }
-      // 如果没有显示的子路由,则显示父路由
+
+      // Show parent if there are no child router to display
       if (showingChildren.length === 0) {
         this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
         return true

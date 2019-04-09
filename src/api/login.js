@@ -2,11 +2,12 @@ import request from '@/utils/request'
 
 export function loginByUsername(username, password) {
   return request({
-    // url: '/user/login',
+    // url: '/login/login',
+    baseURL: 'http://priv.x9water.com:18080/',
     url: '/api/oam/user_permissions/login',
     method: 'post',
-    // 'Content-Type': "application/json",
     data: JSON.stringify({ username: ['new_oam', username], 'password': password })
+
   })
 }
 
@@ -24,4 +25,3 @@ export function getUserInfo(token) {
     params: { token }
   })
 }
-
