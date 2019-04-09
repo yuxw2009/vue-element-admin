@@ -34,85 +34,83 @@ import nestedRouter from './modules/nested'
   }
 **/
 export const constantRoutes = [{
-  path: '/redirect',
-  component: Layout,
-  hidden: true,
-  children: [{
-    path: '/redirect/:path*',
-    component: () =>
-                import('@/views/redirect/index')
-  }]
-},
-{
-  path: '/login',
-  component: () =>
-            import('@/views/login/index'),
-  hidden: true
-},
-{
-  path: '/auth-redirect',
-  component: () =>
-            import('@/views/login/authredirect'),
-  hidden: true
-},
-{
-  path: '/404',
-  component: () =>
-            import('@/views/errorPage/404'),
-  hidden: true
-},
-{
-  path: '/401',
-  component: () =>
-            import('@/views/errorPage/401'),
-  hidden: true
-},
-{
-  path: '',
-  component: Layout
+        path: '/redirect',
+        component: Layout,
+        hidden: true,
+        children: [{
+            path: '/redirect/:path*',
+            component: () =>
+                import ('@/views/redirect/index')
+        }]
+    },
+    {
+        path: '/login',
+        component: () =>
+            import ('@/views/login/index'),
+        hidden: true
+    },
+    {
+        path: '/auth-redirect',
+        component: () =>
+            import ('@/views/login/authredirect'),
+        hidden: true
+    },
+    {
+        path: '/404',
+        component: () =>
+            import ('@/views/errorPage/404'),
+        hidden: true
+    },
+    {
+        path: '/401',
+        component: () =>
+            import ('@/views/errorPage/401'),
+        hidden: true
+    },
+    {
+        path: '',
+        component: Layout
 
-}
+    }
 
 ]
 
 export default new Router({
-  mode: 'hash', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+    mode: 'hash', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
 })
 
 export const asyncRoutes = [{
-  path: '',
-  component: Layout,
-  redirect: '/permission/index',
-  alwaysShow: true, // will always show the root menu
-  meta: {
-    title: 'permission',
-    icon: 'lock'
+        path: '',
+        component: Layout,
+        redirect: '/permission/index',
+        alwaysShow: true, // will always show the root menu
+        meta: {
+            title: 'SystemConfig',
+            icon: 'lock'
 
-  },
-  children: [{
-    path: 'accountManage',
-    name: 'AccountManage',
-    component: () =>
-                    import('@/views/accountManage'),
-    meta: { title: 'accountManage', icon: 'form' }
-  }
+        },
+        children: [{
+                path: 'accountManage',
+                name: 'AccountManage',
+                component: () =>
+                    import ('@/views/accountManage'),
+                meta: { title: 'accountManage', icon: 'form' }
+            },
+            {
+                path: 'equipmentManage',
+                name: 'AccountManage',
+                component: () =>
+                    import ('@/views/equipmentManage/index'),
+                name: 'Guide',
+                meta: { title: 'equipmentManage', icon: 'guide', noCache: true }
 
-  ]
+            }
 
-},
-{
-  path: '',
-  component: Layout,
-  redirect: 'equipmentManage/index',
-  children: [{
-    path: 'equipmentManage',
-    component: () =>
-                import('@/views/equipmentManage/index'),
-    name: 'Guide',
-    meta: { title: 'equipmentManage', icon: 'guide', noCache: true }
-  }]
-}
+        ]
+
+    }
+
 
 ]

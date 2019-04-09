@@ -110,35 +110,35 @@
       </div>
     </el-dialog>
     <!-- 客户账户权限设置弹框 -->
-    <el-table ref="crudTable" v-loading="listLoading" :data="list" style="width: 70%; margin: 0 auto" height="550" border stripe>
-      <el-table-column type="selection" width="50" />
-      <el-table-column label="用户名" prop="username" class="el-table-column" min-width="100px" />
+    <el-table ref="crudTable" v-loading="listLoading" :data="list" style="width: 100%; margin: 0 auto" height="550" border stripe>
+      <el-table-column label="用户名" align="center"   prop="username" class="el-table-column" min-width="100px" />
       <!-- <el-table-column label="角色" prop="role" class="el-table-column" min-width="100px"></el-table-column> -->
       <el-table-column type="expand" label=" " width="60">
         <template slot-scope="props">
           <el-row class="filter-container" style="margin-bottom: 20px">
             <el-col :span="13" :offset="11">
               <el-table ref="crudTable" v-loading="listLoading" :data="props.row.filters" size="mini" border>
-                <el-table-column label="权限名称" prop="key" class="el-table-column" min-width="100px">
+                <el-table-column label="权限名称" align="center"  prop="key" class="el-table-column" min-width="100px">
                   <template slot-scope="scope1">
                     {{ getname(scope1.row.key) }}
                   </template>
                 </el-table-column>
-                <el-table-column label="查询条件" prop="op" class="el-table-column" min-width="100px" />
-                <el-table-column label="查询值" prop="value" class="el-table-column" min-width="100px" />
+                <el-table-column label="查询条件" align="center" prop="op" class="el-table-column" min-width="100px" />
+                <el-table-column label="查询值"  align="center" prop="value" class="el-table-column" min-width="100px" />
               </el-table>
             </el-col>
           </el-row>
 
         </template>
       </el-table-column>
-      <el-table-column label="权限值" prop="filterkeys" class="el-table-column" min-width="100px" />
-      <el-table-column label="操作" width="370" align="center">
+      <el-table-column label="权限值" prop="filterkeys"   align="center" class="el-table-column" min-width="100px" />
+      <el-table-column label="操作" width="500" align="center">
         <template slot-scope="scope">
           <!-- <el-button size="mini" type="primary" @click="handleRole(scope.$index, scope.row)">修改角色</el-button> -->
           <el-button size="mini" type="primary" @click="handleFilters(scope.$index, scope.row)">客户账户权限设置</el-button>
           <el-button size="mini" type="primary" @click="handleMenu(scope.$index, scope.row)">菜单权限设置</el-button>
           <el-button size="mini" type="primary" @click="handlePassword(scope.$index, scope.row)">重置密码</el-button>
+           <el-button size="mini" type="primary" @click="delAccount(scope.$index,scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -148,7 +148,7 @@
 <script>
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
-import { addAccount, getAccountList, updateFilters, resetPassword, menuFilters } from '@/api/account'
+import { addAccount, getAccountList, updateFilters, resetPassword, menuFilters,isdelAccount } from '@/api/account'
 import { setToken } from '@/utils/auth'
 // import Cookies from 'js-cookie'
 export default {
@@ -160,14 +160,16 @@ export default {
         {
           path: 'accountManage',
           label: '权限设置'
-        }
+        },
+         {
+          path: 'equipmentManage',
+          label: '设备管理'
+      }
 
       ]
-    },
-    {
-      path: 'equipmentManage',
-      label: '设备管理'
-    }]
+    }
+   
+   ]
     return {
       defaultProps: {
         children: 'children',
@@ -239,6 +241,28 @@ export default {
 
         this.listLoading = false
       })
+    },
+    delAccount(index,data){
+       this.$confirm('删除此账户', '是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          var  sendData = {"table":"user_permission_t","key":["new_oam",data.username]}
+          isdelAccount(sendData).then(res=>{
+              this.list.splice(index,1)
+             this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+          })
+         
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });   
     },
     handleAccountAdd() { // 增加账号按钮事件
       this.accountTemp.username = ''
@@ -333,7 +357,6 @@ export default {
     dialogFiltersDelete(index, row) {
       this.accountTemp.filters.splice(index, 1)
     },
-
     // 新增账号提交
     dialogSubmit() { //
       this.treeNode()

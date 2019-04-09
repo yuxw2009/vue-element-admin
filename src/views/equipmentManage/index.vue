@@ -21,7 +21,7 @@
       </el-form-item>
     </el-form>
     <el-table id="table" ref="crudTable" v-loading="listLoading" :data="maps" :height="tableHeight" border>
-      <el-table-column align="center" type="selection" width="50" />
+      <!-- <el-table-column align="center" type="selection" width="50" /> -->
       <!-- <el-table-column   align="center" label="classify" prop="classify" class="el-table-column  " min-width="100px"></el-table-column  > -->
       <el-table-column align="center" label="设备编号" prop="equipmentNO" class="el-table-column  " width="250" />
       <el-table-column align="center" label="sim卡号" prop="simcard" class="el-table-column  " width="300" />
@@ -56,12 +56,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="总用水量" prop="detail.totalFlow" class="el-table-column  " />
+      <el-table-column label="总用水量" prop="detail.totalFlow" class="el-table-column  " />
 
       <el-table-column align="center" label="操作" class="el-table-column  " width="300" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleEveryUse(scope.row)">每次记录</el-button>
           <el-button size="mini" type="primary" @click="handleDayUse(scope.row)">每天记录</el-button>
+            <el-button size="mini" type="primary" @click="serviceInfo(scope.row)">服务记录</el-button>
         </template>
       </el-table-column>
 
@@ -102,24 +103,16 @@
       @current-change="handleCurrentChange"
     />
 
-    <el-dialog title="每日上报数据" :visible.sync="isDayUsePopupVisible" height="400px">
+    <el-dialog title="服务记录" :visible.sync="isServiceInfo" height="400px">
       <!-- <div id="myChart1" :style="{width: '300px', height: '300px'}"></div> -->
-      <el-table :data="dayUseList" style="width: 100%" size="small" border height="400">
+      <el-table :data="serviceData" style="width: 100%" size="small" border height="400">
+        <el-table-column prop="maintainTime" label='维护时间' min-width="250" align="center" />
 
-        <el-table-column prop="time" label="日期" min-width="250" align="center" />
-        <el-table-column prop="flow" label="用水量" min-width="250" align="center" />
+        <el-table-column prop="masterName" label='维护师傅' min-width="250" align="center" />
+
+        <el-table-column prop="remarks" label="备注" min-width="250" align="center" />
       </el-table>
-      <el-pagination
-        background
-        small
-        :current-page="dayUseQuery.offset"
-        :page-sizes="pagination.pageSizes"
-        :page-size="dayUseQuery.limit"
-        layout="total, sizes, prev, pager, next"
-        :total="dayUseQuery.total"
-        @size-change="handleSizeChange_day"
-        @current-change="handleCurrentChange_day"
-      />
+    
     </el-dialog>
     <el-dialog title="每次上报数据" :visible.sync="isEveryUsePopupVisible" height="400px">
       <!-- <div style="width:500px;height:500px" ref="chart"></div> -->
@@ -140,10 +133,29 @@
         @current-change="handleCurrentChange_every"
       />
     </el-dialog>
+     <el-dialog title="每天上报数据" :visible.sync="isDayUsePopupVisible" height="400px">
+      <!-- <div style="width:500px;height:500px" ref="chart"></div> -->
+
+      <el-table :data="dayUseList" style="width: 100%" size="small" border height="400">
+        <el-table-column prop="time" label="时间" min-width="200" align="center" />
+        <el-table-column prop="flow" label="用水量" min-width="200" align="center" />
+      </el-table>
+      <el-pagination
+        background
+        small
+        :current-page="everyUseQuery.offset"
+        :page-sizes="everyUseQuery.pageSizes"
+        :page-size="everyUseQuery.limit"
+        layout="total, sizes, prev, pager, next"
+        :total="everyUseQuery.total"
+        @size-change="handleSizeChange_every"
+        @current-change="handleCurrentChange_every"
+      />
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getEquipmentList, getFilterList, getDayUseList, getEveryUseList, getEquipmentDetail } from '@/api/equipment'
+import {getEquipmentList, getFilterList, getDayUseList, getEveryUseList, getEquipmentDetail,getServiceList} from '@/api/equipment'
 import Cookies from 'js-cookie'
 // import echarts from '@/components/echarts'
 
@@ -153,6 +165,12 @@ export default {
 
   data() {
     return {
+      serviceData:[],
+      isServiceInfo:false,
+      setServiceList:{
+        conditions:[],
+        equipmentNo:'',
+      },
       tableHeight: 0,
       dayUseViewRates: {},
       formInline: {
@@ -232,13 +250,17 @@ export default {
       this.listQuery.conditions = JSON.parse(Cookies.get('userData')).filters
       getEquipmentList(this.listQuery).then(response => {
         this.maps = response.data.rows
-
         const filtersTemp = []
         response.data.rows.forEach(element => {
           filtersTemp.push(element.equipmentNO)
         })
+        if(filtersTemp.length==0) {
+          this.pagination.total = response.data.total
+          this.listLoading = false
+          return false;
+        }
         getFilterList({ equipmentNos: filtersTemp }).then(response => {
-          let filters
+          let filters  = []
           this.maps.forEach((map, i) => {
             filters = new Array()
             response.data.forEach(element => {
@@ -285,6 +307,8 @@ export default {
 
     // 每日上报数据函数
     handleDayUse(row) {
+     
+      this.isDayUsePopupVisible = true
       if (row) this.dayUseQuery.row = row
       row = this.dayUseQuery.row
       this.dayUseQuery.equipmentNo = row.equipmentNO
@@ -295,7 +319,6 @@ export default {
       // getDayUseList({limit:10,offset:1,equipmentNo:row.equipmentNO}).then(res=>{
       //   this.dayUseList=res.rows;
       // })
-      this.isDayUsePopupVisible = true
     },
     // 每次上报数据函数
     handleEveryUse(row) {
@@ -324,6 +347,18 @@ export default {
     handleCurrentChange_every(offset) {
       this.everyUseQuery.offset = offset
       this.handleEveryUse()
+    },
+    //服务记录弹窗
+    serviceInfo(data){
+      console.log(data)
+      this.isServiceInfo = true
+
+       this.setServiceList.equipmentNo = data.equipmentNO
+      getServiceList(this.setServiceList).then(res=>{
+        this.serviceData =  res.data
+        // this.serviceData = res.data.
+      })
+  
     }
 
   }

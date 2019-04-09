@@ -1,0 +1,246 @@
+1 增加账户
+post "api/oam/user_permissions/add"
+req params: {"username":["new_oam","zte_zhangsan"],"password":"123","filters":[{"key":"customerName","op":"like","value":"中兴"},{"key":"address","op":"like","value":"上海"}]}
+ack: {status:ok}
+2 修改密码 (用户登录自己修改密码)
+post "api/oam/user_permissions/modify_pwd"]
+req: {"username":Uname,"old":Old,"new":New}
+ack: {status:Status,reason:Res}
+3 修改权限值
+post "api/oam/modify_record"
+req: {"table":"user_permission_t","key":username,"attrs":{"filters":New}}
+ack: {status:Status,reason:Res}
+3 修改角色
+post "api/oam/modify_record"
+req: {"table":"user_permission_t","key":username,"attrs":{"role":Role}}
+ack: {status:Status,reason:Res}
+3.1 删除用户账号
+post http://priv.x9water.com:18080/api/oam/delete_record
+req:  {"table":"user_permission_t","key":["new_oam","zhangsan"]}
+ack: {status:ok}
+4 获取所有帐号
+get "api/oam/user_permissions/getall/new_oam"
+ack #{status=>ok,result=>UserInfos};
+5 用户登录
+post "api/oam/user_permissions/login"
+req: {"username":["new_oam","zte_zhangsan"],"password":"123"}
+ack: {status:ok,result:{"username":["new_oam","zte_zhangsan"],"filters":[{"key":"customerName","op":"like","value":"中兴"},{"key":"address","op":"like","value":"上海"}}
+6 重置密码
+post "api/oam/user_permissions/reset_pwd"]
+req: {"username":Uname}
+ack: {status:Status,reason:Res}
+
+和微服务之间的接口
+1.根据过滤条件查询设备信息接口
+http://inner.x9water.com/api/pudow-service-erp/pdeEquipment/page
+req: offset=1&limit=10&conditions=[{"key":"uset","op":"like","value":"华为"}]
+
+ack:{
+    "usePager": true,
+    "offset": 1,//当前页数
+    "limit": 10,分页数量
+    "order": null,
+    "sort": null,
+    "total": 35,//记录总数
+    "rows": [{
+            "id": 82,
+            "classify": 1,
+            "equipmentNO": "89860056091585001586",
+            "simcard": "89860056091585001586",
+            "customerId": 101048,
+            "clientele": "华为管线机",
+            "uset": "深圳华为科技有限公司",
+            "macno": null,
+            "batchId": null,
+            "weixinuri": "http://weixin.qq.com/q/JXVrqmXl03mqq1MQWl1-",
+            "volume": "管线机",
+            "productsId": 100311176,
+            "startusing": 4,
+            "companyId": 10000,
+            "matching": "9999,10000",
+            "manufacturer": null,
+            "state": 1,
+            "employdate": null,
+            "maintain": 0,
+            "location": "培训中心A区3楼",
+            "productioTime": null,
+            "address": "深圳华为",
+            "registrationTime": "2017-08-02 06:04:42",
+            "longitude": null,
+            "latitude": null,
+            "spaceId": null,
+            "totalflow": null,
+            "ticket": "gQF68DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL0pYVnJxbVhsMDNtcXExTVFXbDEtAAIEZPuxVQMEAAAAAA==",
+            "rjversion": null,
+            "yjversion": null,
+            "remarks": null,
+            "facilitator": null,
+            "storagetime": null,
+            "installTime": "2015-08-17 16:00:00",
+            "clientelephone": "13764967427",
+            "mastername": "黄悦",
+            "masterPhone": "13564507465",
+            "productionOrder": null,
+            "registration": null,
+            "amount": 1,
+            "sell": 0,
+            "sgcode": "pudao",
+            "devicelevel": 1,
+            "provinceName": null,
+            "cityName": null,
+            "countyName": null,
+            "regionId": 0,
+            "wxtype": 1,
+            "clientelecontacts": null
+        }]
+}
+
+1.1设备维护记录
+http://inner.x9water.com/api/pudow-service-erp/pdeEquipment/getMaintaininfo
+req: conditions=[{"key":"uset","op":"like","value":"华为"}]&equipmentNo=898602B11915A0036597
+
+ack:{
+    {
+        "id": 28971,
+        "taskingId": 2019030338,
+        "equipmentId": 1056,
+        "equipmentNo": "898602B11915A0036597",
+        "masterName": "赵赫",
+        "cellPhone": "17722443444",
+        "flow": 44365,
+        "maintain": 1,
+        "maintainTime": "2019-03-23 07:56:05",
+        "filterelement": "1,2,3",
+        "remarks": "已维护",
+        "descaling": 0,
+        "polling": 0,
+        "state": 1,
+        "mechanicId": 233,
+        "customerId": 100871,
+        "isDetection": 0,
+        "isSoftware": 0,
+        "isHardware": 0,
+        "isComponent": 0,
+        "isSolve": 1,
+        "imgPath": "/up/equipmentImg/",
+        "imgAmount": 1,
+        "imgNum": "20190323155604924566",
+        "maintainType": 1,
+        "isRepair": 0
+   
+    
+        }]
+}
+
+2、根据设备编号查询滤芯信息
+http://inner.x9water.com/api/pudow-service-equipment/equipment/getFiltersByEquipmentNos
+req:equipmentNos=898602B11915A0036567&equipmentNos=898602B10315C0021281&
+ack:[
+    {
+        "id": 42,
+        "createTime": "2017-08-02 16:57:53",
+        "updateTime": "2018-12-25 13:18:25",
+        "equipmentId": 32,
+        "productId": 162,
+        "simcard": "898602B11915A0036567",
+        "no": "1001",
+        "life": "100.00",
+        "ord": 1,
+        "ntime": null,
+        "rtime": null,
+        "productName": "PP棉",
+        "equipmentNo": "898602B11915A0036567"
+    },
+    {
+        "id": 63,
+        "createTime": "2017-08-02 16:57:53",
+        "updateTime": "2019-03-08 17:02:52",
+        "equipmentId": 36,
+        "productId": 178,
+        "simcard": "898607B6091700071929",
+        "no": "1004",
+        "life": "90.15",
+        "ord": 4,
+        "ntime": null,
+        "rtime": null,
+        "productName": "RO膜滤芯",
+        "equipmentNo": "898602B10315C0021281"
+    }
+]
+
+
+3、根据设备编号查看每次上报数据
+http://inner.x9water.com/api/pudow-service-flow/flow/getEveryFlowByEquipmentNo
+req:offset=1&limit=10&equipmentNo=898602B30316C0630119 (HS007)
+req:offset=1&limit=10&equipmentNo=NS1528080962640 (NS005)
+ack:{
+    "usePager": true,
+    "offset": 1,
+    "limit": 10,
+    "order": null,
+    "sort": null,
+    "total": 1876,
+    "rows": [
+        {
+            "time": "2019-03-14 10:14:21",
+            "flow": "4.42"
+        },
+        {
+            "time": "2019-03-14 08:11:48",
+            "flow": "0.18"
+        }
+    ]
+}
+
+4、根据设备编号查看每天上报数据
+http://inner.x9water.com/api/pudow-service-flow/flow/getDayFlowByEquipmentNo
+req:offset=1&limit=10&equipmentNo=898602B30316C0630119 (HS007)
+req:offset=1&limit=10&equipmentNo=NS1528080962640 (NS005)
+ack:{
+    "usePager": true,
+    "offset": 1,
+    "limit": 10,
+    "order": null,
+    "sort": null,
+    "total": 685,
+    "rows": [
+        {
+            "time": "2019-03-14",
+            "flow": "3"
+        },
+        {
+            "time": "2019-03-13",
+            "flow": "1"
+        }
+    ]
+}
+
+
+
+5、查询多台设备信息
+http://inner.x9water.com/api/pudow-service-flow/flow/getStateInfoByEquipmentNos
+req:equipmentNos=898602B11915A0036567&equipmentNos=898602B10315C0021281&
+ack:
+[
+    {
+        "equipmentNo": "HS1509595015125",
+        "onlineState": "在线",
+        "ph": "7.17",
+        "tds": "32",
+        "totalFlow": "52387"
+    },
+    {
+        "equipmentNo": "NS1541578758312",
+        "onlineState": "在线",
+        "ph": null,
+        "tds": "84",
+        "totalFlow": "0"
+    },
+    {
+        "equipmentNo": "NS1528080963000",
+        "onlineState": "在线",
+        "ph": null,
+        "tds": "50",
+        "totalFlow": "3,081.43"
+    }
+]
