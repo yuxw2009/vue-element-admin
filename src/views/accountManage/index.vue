@@ -155,14 +155,21 @@ export default {
   name: 'AccountManage',
   data() {
     const data = [{
-      label: '客户信息',
+      label: '系统配置',
+      path:'/systemManager',
       children: [
         {
-          path: 'accountManage',
+          path: '/systemManager/accountManage',
           label: '权限设置'
-        },
+        }
+      ]
+    },
+    {
+      label: '客户信息',
+      path:'/customerManager',
+      children: [
          {
-          path: 'equipmentManage',
+          path: '/customerManager/equipmentManage',
           label: '设备管理'
       }
 
@@ -281,15 +288,15 @@ export default {
     },
     treeNode() {
       this.menuJurisdiction.length = 0
-      const treeCheckedData = this.$refs.tree.getCheckedNodes()
+      const treeCheckedData = this.$refs.tree.getCheckedKeys()
       for (var i = 0; i < treeCheckedData.length; i++) {
-        if (!treeCheckedData[i].children) {
           const jsonData = {
-            path: treeCheckedData[i].path
+            path: treeCheckedData[i]
           }
           this.menuJurisdiction.push(jsonData)
-        }
       }
+      console.log(this.menuJurisdiction)
+      return false;
     },
     // 修改菜单权限设置提交
     submitMenu() {

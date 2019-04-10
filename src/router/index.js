@@ -82,7 +82,7 @@ export default new Router({
 })
 
 export const asyncRoutes = [{
-        path: '',
+        path: '/systemManager',
         component: Layout,
         redirect: '/permission/index',
         alwaysShow: true, // will always show the root menu
@@ -92,14 +92,29 @@ export const asyncRoutes = [{
 
         },
         children: [{
-                path: 'accountManage',
+                path: '/systemManager/accountManage',
                 name: 'AccountManage',
                 component: () =>
                     import ('@/views/accountManage'),
                 meta: { title: 'accountManage', icon: 'form' }
             },
-            {
-                path: 'equipmentManage',
+
+
+        ]
+
+    },
+    {
+        path: '/customerManager',
+        component: Layout,
+        redirect: '/permission/index',
+        alwaysShow: true, // will always show the root menu
+        meta: {
+            title: 'customerInfo',
+            icon: 'lock'
+
+        },
+        children: [{
+                path: '/customerManager/equipmentManage',
                 name: 'AccountManage',
                 component: () =>
                     import ('@/views/equipmentManage/index'),

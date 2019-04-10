@@ -1,6 +1,6 @@
 1 增加账户
 post "api/oam/user_permissions/add"
-req params: {"username":["new_oam","zte_zhangsan"],"password":"123","filters":[{"key":"customerName","op":"like","value":"中兴"},{"key":"address","op":"like","value":"上海"}]}
+req params: {"username":["new_oam","zte_zhangsan"],"password":"123","right":[{"path","/a"},{"path","/a/b"}],"filters":[{"key":"customerName","op":"like","value":"中兴"},{"key":"address","op":"like","value":"上海"}]}
 ack: {status:ok}
 2 修改密码 (用户登录自己修改密码)
 post "api/oam/user_permissions/modify_pwd"]

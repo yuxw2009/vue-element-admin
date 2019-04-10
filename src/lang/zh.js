@@ -5,6 +5,7 @@ export default {
         accountManage: '账户信息',
         maintenance: '维护记录',
         equipmentManage: '设备信息',
+        customerInfo: '客户信息',
         dashboard: '首页',
         introduction: '简述',
         documentation: '文档',
