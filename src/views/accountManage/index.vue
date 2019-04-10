@@ -51,6 +51,7 @@
                 <el-select v-model="scope.row.op" size="small" placeholder="请选择查询条件">
                   <el-option label="包含" value="like" />
                   <el-option label="等于" value="=" />
+                  <el-option label="不等于" value="!=" />
                 </el-select>
               </template>
             </el-table-column>
