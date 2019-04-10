@@ -106,11 +106,11 @@
     <el-dialog title="服务记录" :visible.sync="isServiceInfo" height="400px">
       <!-- <div id="myChart1" :style="{width: '300px', height: '300px'}"></div> -->
       <el-table :data="serviceData" style="width: 100%" size="small" border height="400">
-        <el-table-column prop="maintainTime" label='维护时间' min-width="250" align="center" />
+        <el-table-column prop="maintainTime" label='服务时间' min-width="250" align="center" />
 
-        <el-table-column prop="masterName" label='维护师傅' min-width="250" align="center" />
+        <el-table-column prop="masterName" label='服务师傅' min-width="250" align="center" />
 
-        <el-table-column prop="remarks" label="备注" min-width="250" align="center" />
+        <el-table-column prop="remarks" label="服务内容" min-width="250" align="center" />
       </el-table>
     
     </el-dialog>
