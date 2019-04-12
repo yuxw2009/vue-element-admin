@@ -23,7 +23,6 @@ export function updateFilters(query) {
         // baseURL: 'http://priv.x9water.com:18080',
         method: 'post',
         url: 'api/oam/modify_record',
-        method: 'post',
         data: query
     })
 }
@@ -32,7 +31,6 @@ export function resetPassword(query) {
         // baseURL: 'http://priv.x9water.com:18080',
         method: 'post',
         url: 'api/oam/user_permissions/reset_pwd',
-        method: 'post',
         data: query
     })
 }
@@ -42,7 +40,6 @@ export function menuFilters(query) {
 
         method: 'post',
         url: 'api/oam/modify_record',
-        method: 'post',
         data: query
     })
 }
@@ -52,7 +49,6 @@ export function isdelAccount(query) {
         // baseURL: 'http://priv.x9water.com:18080',
         method: 'post',
         url: 'api/oam/delete_record',
-        method: 'post',
         data: query
     })
 }

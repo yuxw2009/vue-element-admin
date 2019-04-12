@@ -6,6 +6,7 @@ export default {
         maintenance: '维护记录',
         equipmentManage: '设备信息',
         customerInfo: '客户信息',
+        tableCommomConfig: '通用配置',
         dashboard: '首页',
         introduction: '简述',
         documentation: '文档',

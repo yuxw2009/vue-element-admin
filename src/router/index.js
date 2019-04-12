@@ -98,6 +98,13 @@ export const asyncRoutes = [{
                     import ('@/views/accountManage'),
                 meta: { title: 'accountManage', icon: 'form' }
             },
+            {
+                path: '/systemManager/tableCommomConfig',
+                name: 'tableCommomConfig',
+                component: () =>
+                    import ('@/views/tableCommomConfig'),
+                meta: { title: 'tableCommomConfig', icon: 'form' }
+            },
 
 
         ]

@@ -162,6 +162,10 @@ export default {
         {
           path: '/systemManager/accountManage',
           label: '权限设置'
+        },
+         {
+          path: '/systemManager/systemManager',
+          label: '通用配置'
         }
       ]
     },

@@ -1,0 +1,136 @@
+一、增加一个菜单，用于配置生成通用表格或者表单
+表格：
+1、搜索栏（手动输入）
+详细：表名:searchConf
+
+api：查询
+http://192.168.1.236:3000/document
+req：{"table":"searchConf","attrs":{"modelType":"test"}}
+ack：
+
+[{
+    "modelType":"test",
+    "key":"title",
+    "placeholder":"标题",
+    "formType":"text",
+    "defaultValues":[{name:value},{name:value}]
+    "ord":1
+}]
+
+[
+    {"modelType":"test","key":"title","placeholder":"标题text","formType":"text","defaultValues":"","ord":1},
+    {"modelType":"test","key":"title1","placeholder":"标题time","formType":"time","defaultValues":"","ord":2},
+    {"modelType":"test","key":"title2","placeholder":"标题radio","formType":"radio","defaultValues":[{"key":"男","value":"男"},{"key":"女","value":"女"}],"ord":3},
+    {"modelType":"test","key":"title3","placeholder":"标题checkbox","formType":"checkbox","defaultValues":[{"key":"男","value":"男"},{"key":"女","value":"女"}],"ord":4},
+    {"modelType":"test","key":"title4","placeholder":"标题text","formType":"text","defaultValues":"","ord":5},
+    {"modelType":"test","key":"title5","placeholder":"标题select","formType":"select","defaultValues":[{"key":"1","value":"启用"},{"key":"0","value":"停用"}],"ord":6},
+]
+
+modelType:模块类别
+key：字段属性名称
+placeholder：提示
+formType input类型：1、text,2、file,3、radio,4、checkbox，5、select等
+defaultValues:默认显示数据（下拉框，其他）
+ord：排序码
+
+2、操作栏（手动输入）
+详细：表名：buttonConf
+
+api：查询
+http://192.168.1.236:3000/document
+req：{"table":"buttonConf","attrs":{"modelType":"test"}}
+ack：
+
+[{
+    "modelType":"test",
+    name : '添加',
+    icon : '',
+    colorType : '',
+    ord：1,`
+    clickType:'1'
+}]
+
+[
+    {"modelType":"test","name":"添加","icon":"","colorType":"primary","ord":1,"clickType":1},
+    {"modelType":"test","name":"修改","icon":"","colorType":"success","ord":2,"clickType":2},
+    {"modelType":"test","name":"删除","icon":"","colorType":"info","ord":3,"clickType":1},
+    {"modelType":"test","name":"批量删除","icon":"","colorType":"warning","ord":4,"clickType":1},
+    {"modelType":"test","name":"导出","icon":"","colorType":"danger","ord":5,"clickType":1},
+    {"modelType":"test","name":"导入","icon":"","colorType":"primary","ord":6,"clickType":3}
+]
+
+modelType:模块类别
+name:操作显示名称
+icon：图标
+colorType：按钮类型（primary，success， info，warning，danger）
+ord：操作排序码
+clickType:点击事件类型：
+1、直接操作事件（删除，导出），
+2、弹出层（添加，修改），
+3、打开新窗口（图形报表，外部链接）
+
+
+
+3、table列（手动输入）
+
+
+详细：表名：columnConf
+
+api：查询
+http://192.168.1.236:3000/document
+req：{"table":"columnConf","attrs":{"modelType":"test"}}
+ack：
+
+ cols: [
+          {"modelType":"test",prop: 'name', label: '名字'},
+        {"modelType":"test",prop: 'address', label: '地址'}
+ ]
+
+modelType:模块类别
+prop:字段属性名称
+label：显示名称
+
+list：[{
+    'name':'王小虎',
+     address: '上海市普陀区金沙江路 1516 弄',
+
+},
+{
+    'name':'王小妞',
+     address: '河南郑州金水区',
+
+}]
+
+
+cols：label：列的标题
+label：列的标题；
+
+表单：
+1、列表
+2、呈现效果（文本框，下拉框，文件上传等）
+3、验证格式
+4、添加，修改显示
+
+
+
+
+左侧菜单：
+详细：表名：menuConf
+
+[{
+    "path":"/system",
+    "menuType":"1",
+    "modelType":"test"
+}]
+
+path:路由地址
+menuType：1、通用模板，2、原生接口，3...up
+
+
+5 删除一条记录
+post  /deldocument
+参数: {table:t,attrs:{"":""}}
+
+5 修改多条记录
+post  /modifymultidocument
+参数: {table:t,attrs:a}
