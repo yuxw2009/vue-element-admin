@@ -104,7 +104,7 @@ export const asyncRoutes = [{
                 component: () =>
                     import ('@/views/tableCommomConfig'),
                 meta: { title: 'tableCommomConfig', icon: 'form' }
-            },
+            }
 
 
         ]

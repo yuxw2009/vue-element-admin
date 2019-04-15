@@ -66,7 +66,6 @@ const user = {
                         if (len == 0) {
                             this.$message('这是一条消息提示')
                         } else {
-
                             Cookies.set('userData', data.result)
                             commit('SET_TOKEN', data.result.right)
                             setToken(data.result.right)

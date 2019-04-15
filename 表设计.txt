@@ -1,0 +1,7 @@
+基础配置：
+1、searchConf（搜索栏配置）
+2、buttonConf（操作栏配置）
+3、columnConf（显示列配置）
+
+数据表：
+1、test（测试表）

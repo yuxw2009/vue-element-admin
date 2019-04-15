@@ -14,28 +14,14 @@
           <el-form-item label="密码">
             <el-input v-model="accountTemp.password" size="small" />
           </el-form-item>
-          <!-- <el-form-item label="角色">
+          <el-form-item label="角色">
             <el-select size="small" v-model="accountTemp.role" placeholder="请选择用户角色">
               <el-option label="管理员" value="admin" ></el-option>
               <el-option label="用户" value="user" ></el-option>
             </el-select>
-          </el-form-item> -->
-
-          <el-form-item label="菜单权限">
-            <el-tree
-              ref="tree"
-              :data="data4"
-              show-checkbox
-              node-key
-              default-expand-all
-
-              title="提示"
-              @check="getCurrentKey"
-            />
           </el-form-item>
-
         </div>
-        <el-form-item label="权限值">
+        <el-form-item label="权限值"  v-if='add'>
           <el-button size="small" type="primary" icon="el-icon-tickets" @click="dialogFilterAdd">增加权限值</el-button>
           <el-table :data="accountTemp.filters" style="width: 100%; margin-top:10px; margin-bottom:10px" size="small" border>
             <el-table-column prop="key" label="权限名称" min-width="160">
@@ -82,17 +68,7 @@
     <el-dialog :title="dialogTitle" :visible.sync="accountMenuVisible" :data="list" width="300px" style="’‘">
       <div class="custom-tree-container">
         <div class="block" style="margin-bottom:30px">
-          <!-- <el-tree
-            :data="data4"
-            show-checkbox
-             node-key="path"
-            default-expand-all
-            title="提示"
-            width="30%"
-            ref="tree"
-            :props="defaultProps"
-            @check="getCurrentKey">
-          </el-tree> -->
+       
           <el-tree
             ref="tree"
             :data="data4"
@@ -164,7 +140,7 @@ export default {
           label: '权限设置'
         },
          {
-          path: '/systemManager/systemManager',
+          path: '/systemManager/tableCommomConfig',
           label: '通用配置'
         }
       ]
@@ -183,6 +159,7 @@ export default {
    
    ]
     return {
+      add:false,
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -232,7 +209,6 @@ export default {
     getList() {
       this.listLoading = true
       getAccountList().then(response => {
-        console.log(response)
         this.list = []
         response.data.result.forEach(element => {
           const listTemp = {}
@@ -285,6 +261,7 @@ export default {
       this.accountAddVisible = true
     },
     handleFilters(index, row) { //
+      this.add = true;
       this.accountTemp.username = row.username
       this.accountTemp.filters = row.filters
       this.dialogTitle = '客户账户权限设置'
@@ -293,15 +270,14 @@ export default {
     },
     treeNode() {
       this.menuJurisdiction.length = 0
-      const treeCheckedData = this.$refs.tree.getCheckedKeys()
+      const treeCheckedData =this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
       for (var i = 0; i < treeCheckedData.length; i++) {
           const jsonData = {
             path: treeCheckedData[i]
           }
           this.menuJurisdiction.push(jsonData)
+          
       }
-      console.log(this.menuJurisdiction)
-      return false;
     },
     // 修改菜单权限设置提交
     submitMenu() {
@@ -320,7 +296,6 @@ export default {
         this.getList()
       }).catch(error => {
         this.$message('修改失败')
-        console.log(error)
       })
       this.accountMenuVisible = false
     },
@@ -338,22 +313,45 @@ export default {
           this.$message('已取消重置')
         })
     },
+    
     // 点击菜单权限设置动态渲染
     handleMenu(index, row) {
+       Array.prototype.removeByValue = function(val) {
+      for(var i = 0; i < this.length; i++) {
+        if(this[i] == val) {
+          this.splice(i, 1);
+          break;
+        }
+      }
+    }
       this.treePath.length = 0
       // 权限的默认选中的回显
+      var  parentPath = [];
+      for(var i = 0; i < this.data4.length; i++){
+        if(this.data4[i].children){
+             parentPath.push(this.data4[i].path)
+        }
+        
+      }
       if (row.right != undefined && row.right.length > 0) {
         this.treePath.length = 0
         var arrar = []
         for (var i = 0; i < row.right.length; i++) {
-          arrar.push(row.right[i].path)
+           arrar.push(row.right[i].path)
         }
-
-        this.treePath = arrar
+        
+        for(var  q = 0; q < parentPath.length; q++){
+            arrar.removeByValue(parentPath[q]);
+        }
+        this.treePath =arrar
       } else {
         this.treePath = []
         // this.treePath.length = 0;
       }
+      //数组去重
+      
+    
+
       this.dialogTitle = '菜单权限设置'
       this.accountTemp.username = row.username
       // this.accountTemp.filters = row.filters
@@ -361,7 +359,6 @@ export default {
       // console.log(row.right)
       // localStorage.setItem('right', JSON.stringify(row.right))
       this.accountMenuVisible = true
-      console.log(this.treePath)
       this.$nextTick(function() {
         this.$refs.tree.setCheckedKeys(this.treePath)
       })
@@ -375,8 +372,8 @@ export default {
       const accountSended = {
         username: ['new_oam', this.accountTemp.username],
         password: this.accountTemp.password,
-        filters: this.accountTemp.filters,
-        attrs: { 'right': this.menuJurisdiction }
+        // filters: this.accountTemp.filters,
+        // attrs: { 'right': this.menuJurisdiction }
         // right：this.accountTemp.right
       }
       addAccount(JSON.stringify(accountSended)).then(response => {
@@ -392,8 +389,8 @@ export default {
     },
     // 修改客户账户权限设置
     modifyDialogSubmit() { //
+   
       const accountSended = { table: 'user_permission_t', key: ['new_oam', this.accountTemp.username], attrs: { filters: this.accountTemp.filters, right: this.menuJurisdiction }}
-      console.log(accountSended)
       // console.log(JSON.stringify(accountSended))
       updateFilters(JSON.stringify(accountSended)).then(response => {
         this.$message('修改成功')

@@ -1,4 +1,5 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import router from '../../router';
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -6,16 +7,26 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param route
  */
 function hasPermission(roles, route) { // route是路由的配置目前带父级有3个，roles是权限
+
     if (roles instanceof Array) {
         var role = roles
     } else {
         var role = JSON.parse(roles)
     }
-
     if (route.path) {
-        // for (var i = 0; i < a.length; i++) {
-        //     return route.path.includes(a[i].path)
-        return role.some(value => route.path.includes(value.path))
+
+        // let a = false;
+
+        // for (var b = 0; b < role.length; b++) {
+        //     console.log(8, role[b]);
+        //     if (route.path == role[b].path) {
+        //         a = true;
+        //         break;
+        //     }
+        // }
+        // return a;
+        // return true
+        return role.some(value => route.path == value.path); // route.path.includes(value.path)
     } else {
         return true
     }

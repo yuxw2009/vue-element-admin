@@ -80,7 +80,9 @@ api：查询
 http://192.168.1.236:3000/document
 req：{"table":"columnConf","attrs":{"modelType":"test"}}
 ack：
-
+http://192.168.1.236:3000/document
+req：{"table":"columnConf","attrs":{"modelType":"test"}}
+ack：
  cols: [
           {"modelType":"test",prop: 'name', label: '名字'},
         {"modelType":"test",prop: 'address', label: '地址'}
@@ -90,10 +92,13 @@ modelType:模块类别
 prop:字段属性名称
 label：显示名称
 
+http://192.168.1.236:3000/getdocument
+req：{"table":"test","attrs":{}}
+ack：
 list：[{
     'name':'王小虎',
      address: '上海市普陀区金沙江路 1516 弄',
-
+    "age":20
 },
 {
     'name':'王小妞',
