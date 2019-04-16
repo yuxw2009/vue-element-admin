@@ -125,7 +125,8 @@ label：列的标题；
 [{
     "path":"/system",
     "menuType":"1",
-    "modelType":"test"
+    "modelType":"test",
+    "key"
 }]
 
 path:路由地址
@@ -139,3 +140,27 @@ post  /deldocument
 5 修改多条记录
 post  /modifymultidocument
 参数: {table:t,attrs:a}
+
+
+
+7、baseOptionConf（添加，修改项配置）
+
+[
+    {
+        "modelType":"test",
+        "prop": "name",
+        "label": "名字",
+        "insert":true,
+        "update":true,
+        "ord":1
+        //"verification":""
+    }
+]
+
+modelType:模块类别
+prop:字段属性名称
+label：显示名称
+insert:true添加显示，false不显示
+update:true修改显示，false不显示
+ord：排序码
+verification：验证格式（非空，长度，正则，等验证）
