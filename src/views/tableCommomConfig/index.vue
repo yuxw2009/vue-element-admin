@@ -40,17 +40,26 @@
     <!-- 操作的弹出层 -->
     
        <el-dialog title="添加" :visible.sync="setAddVisible">
-        <el-form :model="coverFormList" label-width="80px">
+        <el-form  label-width="80px">
           <div v-for='(item,index) in coverFormList'  :key='index'>
-            <el-form-item  :label="item.label">
-              <el-input v-model="item.prop" size="small" />
-            </el-form-item>      
+            <el-form-item   v-if="item.formType=='text'"    :label="item.label">
+              <el-input v-model="dialogSuccessData[item.prop]" size="small" />
+            </el-form-item>  
+             <el-form-item   v-if="item.formType=='select'"    :label="item.label">
+
+              <el-select v-model="dialogSuccessData[item.prop]" size="small">
+
+                <el-option v-for="(selectItem,selectIndex) in item.defaultValues"   :key="selectIndex" :label="selectItem.value" :value="selectItem.key" />
+
+              </el-select>
+            </el-form-item>  
+              
           </div>
-          <!-- <el-form-item>
-            <el-button v-if="modify_filter_flag" type="primary" size="small" @click="modifyDialogSubmit">确认</el-button>
-            <el-button v-else type="primary" size="small" @click="dialogSubmit">确认</el-button>
-            <el-button size="small" @click="dialogCancel">取消</el-button>
-          </el-form-item> -->
+          <el-form-item>
+            <!-- <el-button v-if="modify_filter_flag" type="primary" size="small" @click="modifyDialogSubmit">确认</el-button> -->
+            <el-button type="primary" size="small" @click="dialogSubmit()">确认</el-button>
+            <el-button size="small" @click="dialogCancel()">取消</el-button>
+          </el-form-item>
         </el-form>
     </el-dialog>
   
@@ -123,6 +132,8 @@ export default {
       setAddVisible:false,
       //弹窗的数据
       submitFormData:{},
+      //弹窗提交的数据
+      dialogSuccessData:{},
       tableKey: 0,
       list: null,
       total: 0,
@@ -211,7 +222,6 @@ export default {
               }
 
           }
-
           data.attrs = jsonData
           getCommonFun(JSON.stringify(data)).then(res=>{               
                         if(res.data.result=='ok'){
@@ -227,15 +237,26 @@ export default {
     },
     //弹窗打开时间获取弹窗的内容
     opneCover(){
+      this.coevrListParams.attrs.insert = true
        getCommonFun(JSON.stringify(this.coevrListParams)).then(res=>{               
                   if(res.data.result=='ok'){              
                       this.coverFormList = res.data.data
-                      console.log(this.coverFormList)
+                            console.log(this.coverFormList)
+
                       this.setAddVisible = true;
                   }
             }) 
     },
+    //关闭弹出层
+    dialogCancel(){
+      this.setAddVisible = false;
+    },
+    //弹窗form数据提交
+    dialogSubmit(){
+      console.log(this.dialogSuccessData)
 
+      
+    },
   
     getList() {
       this.listLoading = true
