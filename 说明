@@ -180,3 +180,8 @@ ord：排序码
 formType input类型：1、text,2、file,3、radio,4、checkbox，5、select等
 defaultValues:默认显示数据（下拉框，其他）
 verification：验证格式（非空，长度，正则，等验证）
+
+
+table分页
+8 post getdocument
+参数 {table:"t",attrs:{a:1},curpage:1,page_num:10}
