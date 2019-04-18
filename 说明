@@ -171,7 +171,7 @@ post  /modifymultidocument
     }
 ]
 
-modelType:模块类别
+modelType:模块类别（表名）
 prop:字段属性名称
 label：显示名称
 insert:true添加显示，false不显示

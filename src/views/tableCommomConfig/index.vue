@@ -1,95 +1,28 @@
 <template>
   <div class="app-container">
-    <div class="filter-container" >
-        <div  v-for='(item,index) in formTypeData' :key='index' class='displayInline'>
-             <el-select v-model="submitFormData[item.key]"  v-if="item.formType=='select'"  :placeholder="item.placeholder" clearable style="width: 90px" class="filter-item">
-                <el-option v-for="(selectItem,selectIndex) in item.defaultValues"   :key="selectIndex" :label="selectItem.value" :value="selectItem.key" />
-            </el-select>
-            <el-date-picker  v-else-if="item.formType=='time'" 
-                v-model="submitFormData[item.key]"
-                type="daterange"
-                align="left"
-                value-format="yyyy-MM-dd"
-                unlink-panels
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期">
-                </el-date-picker>
-              <el-input  v-else   v-model="submitFormData[item.key]"  :placeholder="item.placeholder"  style="width: 200px;" class="filter-item"/>
-        </div> 
-        <el-button  size='small' v-waves   class="filter-item" type="primary" icon="el-icon-search"  @click='searchTableFun()'>{{ $t('table.search') }}</el-button>
-    </div>
-    <div class='bottom'>  
-      <el-button size='mini' v-for='(item,index) in commomButtonData'   :key='index' 
-      class="filter-item" style="margin-left: 10px;" :type="item.colorType" :ord='item.ord'   @click='opneCover(item.clickType,item.name)' >{{item.name}}</el-button> 
-    </div>
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="tableDataList"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%;"
-     @selection-change="changeChecked"
-     >
-    <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column  align='center' v-for="(col,index) in cols" :key='index'   :prop="col.prop" :label="col.label" ></el-table-column>
-    </el-table>
-    <!--table分页 -->
-    <el-pagination v-show="listQuery.total>0" :total="listQuery.total"  :page-sizes="[2,10, 20, 30, 40,50]"  layout="total, sizes, prev, pager, next, jumper" :page.sync="listQuery.curpage" :limit.sync="listQuery.page_num" 
-       @size-change="handleSizeChange"  @current-change="handleCurrentChange"></el-pagination>
-        
-    <!-- 操作的弹出层 -->
-    
-       <el-dialog :title="dialogTitle" :visible.sync="setAddVisible">
-        <el-form  label-width="80px">
-          <div v-for='(item,index) in coverFormList'  :key='index'>
-            <el-form-item   v-if="item.formType=='text'"    :label="item.label">
-              <el-input v-model="dialogSuccessData[item.prop]" size="small" />
-            </el-form-item>  
-             <el-form-item   v-if="item.formType=='select'"    :label="item.label">
-
-              <el-select v-model="dialogSuccessData[item.prop]" size="small">
-
-                <el-option v-for="(selectItem,selectIndex) in item.defaultValues"   :key="selectIndex" :label="selectItem.value" :value="selectItem.key" />
-
-              </el-select>
-            </el-form-item>  
-              
-          </div>
-          <el-form-item>
-            <!-- <el-button v-if="modify_filter_flag" type="primary" size="small" @click="modifyDialogSubmit">确认</el-button> -->
-            <el-button type="primary" size="small" @click="dialogSubmit()">确认</el-button>
-            <el-button size="small" @click="dialogCancel()">取消</el-button>
-          </el-form-item>
-        </el-form>
-    </el-dialog>
-  
-  
-  </div>
+    <!-- 搜索 -->
+    <Search></Search>
+     <Button></Button>
+     <Table></Table>
+   </div>
 </template>
 <script>
 import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+  //引入组件
+  import Button from './button';
+  import dialog from './dialog';
+  import Search from './search';
+  import Table from './table';
 import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
-import waves from '@/directive/waves' // Waves directive
-import { parseTime } from '@/utils'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-const calendarTypeOptions = [
-  { key: 'CN', display_name: 'China' },
-  { key: 'US', display_name: 'USA' },
-  { key: 'JP', display_name: 'Japan' },
-  { key: 'EU', display_name: 'Eurozone' }
-]
-// arr to obj ,such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
-  directives: { waves },
+  components: {
+      // pagination,
+      Button,
+      // dialog,
+      Search,
+      Table
+   },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -163,7 +96,7 @@ export default {
       listLoading: true,
       listQuery: {
         curpage: 1,
-        page_num: 2,
+        page_num: 10,
         total:0,
        
      
@@ -172,9 +105,9 @@ export default {
     }
   },
   created() {
-    this.getFormSearch()
-    this.getTableButton()
-    this.getTableTitle()
+    // this.getFormSearch()
+    // this.getTableButton()
+    // this.getTableTitle()
   },
   methods: {
       //通用的
@@ -222,7 +155,7 @@ export default {
           getCommonFun(JSON.stringify(obj)).then(res=>{               
                     if(res.data.result=='ok'){
                         this.tableDataList = res.data.data
-                         this.listQuery.total =7
+                         this.listQuery.total =res.data.count
                         this.listLoading = false
                     }
               }) 
@@ -237,16 +170,10 @@ export default {
         this.listQuery.page_num = val;
          this.getTableList(this.tableListParams)
       },
-     
-
     //条件搜索table
     searchTableFun(){
       this.tableListParams.attrs = this.submitFormData
       this.getTableList(this.tableListParams)
-    },
-    //table复选框改变事件
-    changeChecked(val){
-        this.multipleSelection = val;
     },
     //弹窗打开时间获取弹窗的内容
     opneCover(clickType,name){

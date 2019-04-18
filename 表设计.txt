@@ -6,3 +6,105 @@
 
 数据表：
 1、test（测试表）
+
+
+
+
+接口
+分页查询：
+
+地址：http://192.168.1.236:3000/getdocument
+类型：post
+参数：{"table":"test","attrs":{ "address": "上海"},"page_num":"10","curpage":"1"}
+返回：{
+    "result": "ok",
+    "count": 2,
+    "data": [
+        {
+            "_id": "5cb467053649193d265fd81a",
+            "water": "0.1",
+            "switchStatus": "男",
+            "equipmentId": "FG348388",
+            "leakingAlarm": "1",
+            "name": "账号",
+            "address": "上海"
+        },
+        {
+            "_id": "5cb53632b2449444b2d0502a",
+            "water": "0.1",
+            "switchStatus": "online",
+            "equipmentId": "JH46345",
+            "leakingAlarm": "false",
+            "name": "账号2",
+            "address": "上海"
+        }
+    ]
+}
+
+
+新增
+地址：http://192.168.1.236:3000/document
+类型：post
+参数：{"table":"test","attrs":{
+                        "water": "0.1",
+            "switchStatus": "online",
+            "equipmentId": "JH46345",
+            "leakingAlarm": "false",
+            "name": "账号2",
+            "address": "上海"
+        }}
+
+返回：{
+    "result": "ok",
+    "data": {
+        "n": 1,
+        "ok": 1
+    }
+}
+
+
+
+
+修改一条记录
+地址：http://192.168.1.236:3000/modifydocument
+类型：post
+参数：{"table":"test","updates":{"address":"北京"},"attrs":{"_id": "5cb467053649193d265fd81a"}}
+
+返回：{
+    "result": "ok",
+    "data": {
+        "n": 1,
+        "nModified": 1,
+        "ok": 1
+    }
+}
+
+
+修改多条记录
+地址：http://192.168.1.236:3000/modifymultidocument
+类型：post
+参数：{"table":"test","updates":{"switchStatus":"2"},"attrs":{"address": "上海"}}
+
+返回：{
+    "result": "ok",
+    "data": {
+        "n": 2,
+        "nModified": 2,
+        "ok": 1
+    }
+}
+
+
+
+修改多条记录
+地址：http://192.168.1.236:3000/deldocument
+类型：post
+参数：{"table":"test","attrs":{"_id": "5cb81b68763f4eb14ac25621"}}
+
+返回：{
+    "result": "ok",
+    "data": {
+        "n": 1,
+        "ok": 1
+    }
+}
