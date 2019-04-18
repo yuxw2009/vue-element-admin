@@ -2,11 +2,14 @@
     <div>
         <!--头部按钮 -->
     <div class='bottom'>  
+
         <el-button size='mini' v-for='(item,index) in commomButtonData'   :key='index' 
-        class="filter-item" style="margin-left: 10px;" :type="item.colorType" :ord='item.ord'   @click='opneCover(item.clickType,item.name)' >{{item.name}}</el-button> 
+        class="filter-item" style="margin-left: 10px;" :type="item.colorType" :ord='item.ord'   @click='opneCover(item.clickType,item.name)' >{{item.name}}
+        </el-button> 
+
         </div>
         <!--弹窗 -->
-        <el-dialog :title="dialogTitle" :visible.sync="setAddVisible">
+        <el-dialog :title="dialogTitle" :visible.sync="setAddVisible" width="500px">
             <el-form  label-width="80px">
             <div v-for='(item,index) in coverFormList'  :key='index'>
                 <el-form-item   v-if="item.formType=='text'"    :label="item.label">
@@ -22,11 +25,11 @@
                 </el-form-item>  
                 
             </div>
-            <el-form-item>
+            <div class='button-cont'>
                 <!-- <el-button v-if="modify_filter_flag" type="primary" size="small" @click="modifyDialogSubmit">确认</el-button> -->
                 <el-button type="primary" size="small" @click="dialogSubmit()">确认</el-button>
                 <el-button size="small" @click="dialogCancel()">取消</el-button>
-            </el-form-item>
+            </div>
             </el-form>
       </el-dialog>
     </div>
@@ -37,10 +40,11 @@ import bus from '@/main.js'
 import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
 
 export default {  
+    props:['tableName'],
     data(){
         return {
          coevrListParams:{
-          "table":"baseOptionConf","attrs":{ "modelType": "test"}
+          "table":"baseOptionConf","attrs":{ "modelType": ""}
         },
         //弹窗提交的数据
          dialogSuccessData:{},
@@ -58,22 +62,22 @@ export default {
         },
         //复选框选中的数据
         multipleSelection:[],
-            buttonParams:{
-                "table":"buttonConf","attrs":{"modelType":"test"}
+        buttonParams:{
+                "table":"buttonConf","attrs":{"modelType":""}
         },
          dialogFormParams:{
-
-            "table":"test","attrs":{}
+            "table":"","attrs":{}
         },
          updateSubmitDisplayParams:{
-           "table":"test","updates":{},"attrs":{}
+           "table":"","updates":{},"attrs":{}
         },
         deleteDisplayParams:{
-          "table":"test","attrs":{}
+          "table":"","attrs":{}
         },
     }
 },
     created(){
+      this.getUrlJurisdin()
       this.getTableButton()
     },
     mounted(){
@@ -84,7 +88,16 @@ export default {
         });
     },
     methods:{
+      //匹配url
+     getUrlJurisdin(){
      
+        this.coevrListParams.attrs.modelType= this.tableName
+        this.buttonParams.attrs.modelType= this.tableName
+        this.dialogFormParams.table= this.tableName
+         this.updateSubmitDisplayParams.table= this.tableName
+        this.deleteDisplayParams.table= this.tableName
+
+      },   
        //获取table的操作按钮
     getTableButton(){         
           getCommonFun(JSON.stringify(this.buttonParams)).then(res=>{               
@@ -223,6 +236,18 @@ export default {
 }
 </script>
 
-<style>
+<style> 
+        .el-form-item__label{
+           width: 90px !important;
+        }
+        .el-form-item__content{
+                margin-left: 100px;
+        }
+        .el-input{
+            width:70%;
 
+        }
+        .button-cont{
+            text-align: center;
+        }
 </style>

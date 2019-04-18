@@ -3,6 +3,7 @@
 2、buttonConf（操作栏配置）
 3、columnConf（显示列配置）
 4、baseOptionConf（添加，修改项配置）
+5、menuConf（左侧菜单配置）
 
 数据表：
 1、test（测试表）

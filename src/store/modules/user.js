@@ -1,5 +1,6 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getCommonFun } from '@/api/tableCommom'
 import Cookies from 'js-cookie'
 const user = {
     state: {
@@ -68,6 +69,13 @@ const user = {
                         } else {
                             Cookies.set('userData', data.result)
                             commit('SET_TOKEN', data.result.right)
+                                //调接口获取mogo接口地址
+                            getCommonFun(JSON.stringify({ "table": "menuConf", "attrs": {} })).then(res => {
+                                if (res.data.result == 'ok') {
+                                    Cookies.set('urlJurisdiction', res.data.data)
+                                }
+                            })
+
                             setToken(data.result.right)
                             resolve()
                         }
@@ -127,5 +135,6 @@ const user = {
         }
     }
 }
+
 
 export default user

@@ -26,22 +26,29 @@
 import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
 import bus from '@/main.js'
 export default {
+     props:['tableName'],
     data(){
         return{
             //table头部form搜索数据
             formTypeData:[ ],
             searchParams:{
-                "table":"searchConf","attrs":{"modelType":"test"}
+                "table":"searchConf","attrs":{"modelType":""}
             },
             //弹窗的数据
             submitFormData:{} 
         }    
     },
     created(){
+        this.getUrlJurisdin()
         this.getFormSearch()
 
     },
     methods:{
+          //匹配url
+        getUrlJurisdin(){
+            this.searchParams.attrs.modelType= this.tableName
+
+        },   
         //获取form中的搜索值
         getFormSearch(){
             getCommonFun(JSON.stringify(this.searchParams)).then(res=>{

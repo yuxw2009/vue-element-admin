@@ -185,3 +185,18 @@ verification：验证格式（非空，长度，正则，等验证）
 table分页
 8 post getdocument
 参数 {table:"t",attrs:{a:1},curpage:1,page_num:10}
+
+
+
+9、menuConf（左侧菜单配置）
+[
+    {
+        "path":"/system",
+        "menuType":"mongo",
+        "tableName":"test"
+    }
+]
+
+path（同路由path）
+menuType（左侧菜单模板类型：0、native模板（不做任何处理，手动实现），1、mongo模板，2、mysql模板，3、....）
+tableName（mongo模板、mysql模板对应的表名）

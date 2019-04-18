@@ -23,14 +23,11 @@
 import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
 import bus from '@/main.js'
 export default {
+  props:['tableName'],
   data(){
     return{
-       columnParams:{
-                "table":"columnConf","attrs":{"modelType":"test"}
-        },
-        tableListParams:{
-           "table":"test","attrs":{}
-        },
+        columnParams:{"table":"columnConf","attrs":{"modelType":''}},
+        tableListParams:{"table":"","attrs":{}},
         tableKey: 0,
         listLoading: true,
         //table数据
@@ -49,6 +46,7 @@ export default {
     }
   },
   created(){
+    this.getUrlJurisdin()
     this.getTableTitle()
 
   },
@@ -68,6 +66,12 @@ export default {
     });
   },
   methods:{
+      //匹配url
+      getUrlJurisdin(){
+        this.columnParams.attrs.modelType= this.tableName
+        this.tableListParams.table= this.tableName
+
+      },
         //获取table列的title
         getTableTitle(){
               getCommonFun(JSON.stringify(this.columnParams)).then(res=>{
