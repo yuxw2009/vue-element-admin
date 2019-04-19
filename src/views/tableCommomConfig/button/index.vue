@@ -16,14 +16,10 @@
                 <el-input v-model="dialogSuccessData[item.prop]" size="small" />
                 </el-form-item>  
                 <el-form-item   v-if="item.formType=='select'"    :label="item.label">
-
                 <el-select v-model="dialogSuccessData[item.prop]" size="small">
-
                     <el-option v-for="(selectItem,selectIndex) in item.defaultValues"   :key="selectIndex" :label="selectItem.value" :value="selectItem.key" />
-
                 </el-select>
-                </el-form-item>  
-                
+                </el-form-item>         
             </div>
             <div class='button-cont'>
                 <!-- <el-button v-if="modify_filter_flag" type="primary" size="small" @click="modifyDialogSubmit">确认</el-button> -->
@@ -34,11 +30,9 @@
       </el-dialog>
     </div>
 </template>
-
 <script>
 import bus from '@/main.js'
 import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
-
 export default {  
     props:['tableName'],
     data(){
@@ -236,7 +230,7 @@ export default {
 }
 </script>
 
-<style> 
+<style scoped> 
         .el-form-item__label{
            width: 90px !important;
         }

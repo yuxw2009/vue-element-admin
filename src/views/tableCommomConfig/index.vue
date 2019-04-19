@@ -49,7 +49,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
     .bottom{
     margin-bottom: 10px;
     }

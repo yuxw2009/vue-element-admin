@@ -370,7 +370,7 @@ window.onresize = function() {
 
 </script>
 
-<style >
+<style scoped>
   #app .main-container{
   }
   .app-main[data-v-6beed8bc] {
