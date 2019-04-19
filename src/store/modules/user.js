@@ -69,15 +69,17 @@ const user = {
                         } else {
                             Cookies.set('userData', data.result)
                             commit('SET_TOKEN', data.result.right)
+                            setToken(data.result.right)
                                 //调接口获取mogo接口地址
                             getCommonFun(JSON.stringify({ "table": "menuConf", "attrs": {} })).then(res => {
                                 if (res.data.result == 'ok') {
-                                    Cookies.set('urlJurisdiction', res.data.data)
+                                    Cookies.set('urlAllRouter', res.data.data)
+                                        // Cookies.set('urlJurisdiction', res.data.data)
                                 }
+
+                                resolve()
                             })
 
-                            setToken(data.result.right)
-                            resolve()
                         }
                     } else {
                         alert(response.data.reason)

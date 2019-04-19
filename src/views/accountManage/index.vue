@@ -126,38 +126,12 @@
 import permission from '@/directive/permission/index.js' // 权限判断指令
 import checkPermission from '@/utils/permission' // 权限判断函数
 import { addAccount, getAccountList, updateFilters, resetPassword, menuFilters,isdelAccount } from '@/api/account'
+import {getCommonFun} from '@/api/tableCommom'
 import { setToken } from '@/utils/auth'
-// import Cookies from 'js-cookie'
+// import c from 'js-cookie'
 export default {
   name: 'AccountManage',
   data() {
-    const data = [{
-      label: '系统配置',
-      path:'/systemManager',
-      children: [
-        {
-          path: '/systemManager/accountManage',
-          label: '权限设置'
-        },
-         {
-          path: '/systemManager/tableCommomConfig',
-          label: '通用配置'
-        }
-      ]
-    },
-    {
-      label: '客户信息',
-      path:'/customerManager',
-      children: [
-         {
-          path: '/customerManager/equipmentManage',
-          label: '设备管理'
-      }
-
-      ]
-    }
-   
-   ]
     return {
       add:false,
       defaultProps: {
@@ -165,7 +139,7 @@ export default {
         label: 'label'
       },
       treePath: [],
-      data4: JSON.parse(JSON.stringify(data)),
+      data4: [],
       accountAddVisible: false,
       accountMenuVisible: false,
       dialogVisible: false,
@@ -187,14 +161,25 @@ export default {
       list: [],
       listLoading: false,
       modify_filter_flag: false, // 弹窗确认按钮切换
-      dialogTitle: ''
+      dialogTitle: '',
+      allRoutesParams:{"table":"menuConf","attrs":{}}
     }
   },
   created() {
     this.getList()
+    this.getTreeData()
   },
   methods: {
     checkPermission,
+    getTreeData(){
+    //获取tree的值
+      getCommonFun(this.allRoutesParams).then(res=>{
+         if(res.data.result=='ok'){
+                 this.data4 = res.data.data
+            }
+      })
+
+    },
     getCurrentKey(data) {
       const treeDate = data
     },

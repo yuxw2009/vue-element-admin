@@ -7,6 +7,8 @@ export default {
         equipmentManage: '设备信息',
         customerInfo: '客户信息',
         tableCommomConfig: '通用配置',
+        platformMaintenance: '平台维护',
+        develmentManager: '元数据管理',
         dashboard: '首页',
         introduction: '简述',
         documentation: '文档',

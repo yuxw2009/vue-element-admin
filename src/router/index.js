@@ -111,6 +111,24 @@ export const asyncRoutes = [{
 
     },
     {
+        path: '/platformMaintenance',
+        component: Layout,
+        alwaysShow: true, // will always show the root menu\
+        meta: { title: 'develmentManager', icon: 'guide', noCache: true },
+        children: [{
+                path: '/platformMaintenance/develmentManager',
+                name: 'AccountManage',
+                component: () =>
+                    import ('@/views/develmentManager/index'),
+                name: 'Guide',
+                meta: { title: 'develmentManager', icon: 'guide', noCache: true }
+
+            }
+
+        ]
+
+    },
+    {
         path: '/customerManager',
         component: Layout,
         redirect: '/permission/index',
