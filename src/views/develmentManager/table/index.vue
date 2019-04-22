@@ -10,13 +10,13 @@
       style="width: 100%;"
      @selection-change="changeChecked"
      >  
-        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
+     <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column type="expand" label=" " width="60">
         <template slot-scope="props">
           <el-row class="filter-container" style="margin-bottom: 20px" >
             <el-col   class="demo-table-expand" >
-              <el-table ref="crudTable" v-loading="listLoading" :data="props.row.children" size="mini" border  label-position="left"  inline>
-                <!-- <el-table-column type="expand" label=" " width="60"></el-table-column> -->
+              <el-table ref="crudTable" v-loading="listLoading" :data="props.row.children" size="mini" border  label-position="left"  inline    @selection-change="changeCheckeds">
+                <el-table-column type="selection" label=" " width="60"></el-table-column>
                     <el-table-column  align='center'  v-for="(col,index) in cols" :key='index'   height='50px'  :prop="col.prop" :label="col.label" >               
                       </el-table-column>     
               </el-table>
@@ -25,118 +25,49 @@
 
         </template>
       </el-table-column>
-        <el-table-column  align='center' v-for="(col,index) in cols" :key='index'  height='30px'  :prop="col.prop" :label="col.label" ></el-table-column>
+      
+       <el-table-column  align='center' v-for="(col,index) in cols" :key='index'  height='30px'  :prop="col.prop" :label="col.label" ></el-table-column>
+      <!-- <el-table-column label="操作"  align='center' width='400px'>
+          <template slot-scope="scope" >  
+            <div  v-for = '(item,index) in  tableRowButton' :key='index' >
+              <el-button   :size="item.size" @click="handleEvent(scope.row,index)">{{item.name}}</el-button>
+              <Dialog ref="dialog" v-if="coverFormList.length>0" :coverFormList='coverFormList' @formSubmit='editSubmit'></Dialog>
+             </div>
+          </template>
+        </el-table-column> -->
          <el-pagination v-show="listQuery.total>0" :total="listQuery.total"  :page-sizes="[10, 20, 30, 40,50]"  layout="total, sizes, prev, pager, next, jumper" :page.sync="listQuery.curpage" :limit.sync="listQuery.page_num" 
-      @size-change="handleSizeChange"  @current-change="handleCurrentChange"></el-pagination>  
-    </el-table>
-
-   
+          @size-change="handleSizeChange"  @current-change="handleCurrentChange"></el-pagination>  
+      </el-table>
+     
   </div>  
   
 </template>
-
 <script>
-import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
 import bus from '@/main.js'
+import Dialog from '../dialog'
+import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
 export default {
-  props:['tableName'],
+  props:['tableName','coverFormList'],
+  components:{
+    Dialog
+  },
   data(){
     return{
         columnParams:{"table":"columnConf","attrs":{"modelType":''}},
-        tableListParams:{"table":"","attrs":{}},
+
+        tableListParams:{"table":"menuConf","attrs":{}},
+        //table每行的按钮的值
+        tableRowButton:[
+          {size:'mini',name:'编辑',type:'danger',clickType:1},
+          {size:'mini',name:'删除',type:'danger',clickType:2},
+          {size:'mini',name:'添加子菜单',type:'danger',clickType:3},
+          {size:'mini',name:'配置属性',type:'danger',clickType:4}
+
+        ],
         tableKey: 0,
         listLoading: false,
         //table数据
-        tableDataList:[
-        {
-            "_id": "5cb9801b763f4eb14ac26261",
-            "path": "/systemManager",
-            "component": "Layout",
-            "redirect": "/permission/index",
-            "alwaysShow": true,
-            "label": "系统配置",
-            "meta": {
-                "title": "SystemConfig",
-                "icon": "lock"
-            },
-            "children": [
-                {
-                    "path": "/systemManager/accountManage",
-                    "name": "AccountManage",
-                    "component": "/views/accountManage/index",
-                    "label": "账户信息",
-                    "meta": {
-                        "title": "accountManage",
-                        "icon": "form"
-                    },
-                    "menuType": "native"
-                },
-                {
-                    "path": "/systemManager/tableCommomConfig",
-                    "name": "tableCommomConfig",
-                    "component": "/views/tableCommomConfig/index",
-                    "label": "通用配置",
-                    "meta": {
-                        "title": "tableCommomConfig",
-                        "icon": "form"
-                    },
-                    "menuType": "mongo",
-                    "tableName": "test"
-                }
-            ]
-        },
-        {
-            "_id": "5cb9802d763f4eb14ac26262",
-            "path": "/platformMaintenance",
-            "component": "Layout",
-            "redirect": "/permission/index",
-            "alwaysShow": 'true',
-            "label": "平台维护",
-            "meta": {
-                "title": "develmentManager",
-                "icon": "guide"
-            },
-            "children": [
-                {
-                    "path": "/platformMaintenance/develmentManager",
-                    "name": "develmentManager",
-                    "component": "/views/develmentManager/index",
-                    "label": "元数据管理",
-                    "meta": {
-                        "title": "develmentManager",
-                        "icon": "guide"
-                    },
-                    "menuType": "mongo",
-                    "tableName": "test"
-                }
-            ]
-        },
-        {
-            "_id": "5cb98036763f4eb14ac26263",
-            "path": "/customerManager",
-            "component": "Layout",
-            "redirect": "/permission/index",
-            "alwaysShow": true,
-            "label": "客户信息",
-            "meta": {
-                "title": "customerInfo",
-                "icon": "lock"
-            },
-            "children": [
-                {
-                    "path": "/customerManager/equipmentManage",
-                    "name": "equipmentManage",
-                    "component": "/views/equipmentManage/index",
-                    "label": "设备信息",
-                    "meta": {
-                        "title": "equipmentManage",
-                        "icon": "guide"
-                    },
-                    "menuType": "native"
-                }
-            ]
-        }
-       ],
+        tableDataList:[],
         cols:  [
               {"modelType":"test",prop: 'label', label: '菜单名称'},
               {"modelType":"test",prop: 'path', label: '菜单路径'},
@@ -145,7 +76,7 @@ export default {
                {"modelType":"test",prop: 'tableName', label: '表名'},
               {"modelType":"test",prop: 'meta.icon', label: '图标'},
               {"modelType":"test",prop: 'alwaysShow', label: '显示状态'},
-       ],  
+       ],    
         listQuery: {
           curpage: 1,
           page_num: 10,
@@ -153,13 +84,16 @@ export default {
       },
       submitFormData:{
 
-      }
-
+      },
+      m:0,
+      fatherSelect:[],
+      childSelect:[]
     }
   },
   created(){
     // this.getUrlJurisdin()
     // this.getTableTitle()
+    this.getTableList()
 
   },
   mounted(){
@@ -184,39 +118,28 @@ export default {
         this.tableListParams.table= this.tableName
 
       },
-        //获取table列的title
-        getTableTitle(){   
-          
-             
-        },
-       
+      //获取table列的title
+      getTableTitle(){           
+      },
+      
       //获取table的列表
-      getTableList(data,curpage){
-        let objNew = JSON.stringify(data);
-          let obj = JSON.parse(objNew);
-          obj.attrs = this.submitFormData
-          obj.curpage = curpage || this.listQuery.curpage
-          obj.page_num = this.listQuery.page_num
-          var  jsonData = {
-              }
-          for(var index in obj.attrs){//遍历json对象的每个key/value对,p为key   
-                if(obj.attrs[index]){
-                    jsonData[index] = obj.attrs[index]
-                }
-
-            }
-            obj.attrs = jsonData
-            getCommonFun(JSON.stringify(obj)).then(res=>{               
-                      if(res.data.result=='ok'){
+      getTableList(){
+          getCommonFun(JSON.stringify(this.tableListParams)).then(res=>{               
+                    if(res.data.result=='ok'){
                           this.tableDataList = res.data.data
-                          this.listQuery.total =res.data.count
-                          this.listLoading = false
-                      }
-                }) 
+                        this.listLoading = false
+                    }
+              }) 
       },
      //table复选框改变事件
       changeChecked(val){
-             bus.$emit("checkeFun", val);
+        this.fatherSelect = val;
+        bus.$emit("checkeFun", this.fatherSelect, this.childSelect);
+      },
+      //table复选框改变事件
+      changeCheckeds(val){
+        this.childSelect = val;
+        bus.$emit("checkeFun", this.fatherSelect, this.childSelect);
       },
         //分页中每行显示的多少数据的事件
         handleSizeChange(val) {
@@ -227,7 +150,21 @@ export default {
          handleCurrentChange(val) {
             this.listQuery.curpage = val
             this.getTableList(this.tableListParams)
-         }   
+         },
+         //table每行按钮的事件
+        handleEvent(row,index){
+          this.m=index;
+            this.$refs.dialog[index].openDialog(row); 
+        },
+        //弹窗的修改
+        editSubmit(){
+          alert(this.m)
+          if("edit"){
+
+          }else if("del"){
+
+          }
+        },
   }
 
 }

@@ -70,6 +70,11 @@ export default {
 </script>
 
 <style scoped>
+.displayInline{
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: top;
+}
 
 </style>
 
