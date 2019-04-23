@@ -15,7 +15,8 @@
         <template slot-scope="props">
           <el-row class="filter-container" style="margin-bottom: 20px" >
             <el-col   class="demo-table-expand" >
-              <el-table ref="crudTable" v-loading="listLoading" :data="props.row.children" size="mini" border  label-position="left"  inline @select="changeCheckedid"   @selection-change="changeCheckeds(props.row._id)">
+              <el-table ref="crudTable" v-loading="listLoading" :data="props.row.children" size="mini" border  label-position="left"  inline 
+              @select="changeCheckedid"   @selection-change="changeCheckeds(props.row._id)"   @select-all='selectAllChildren'>
                 <el-table-column type="selection" label=" " width="60"></el-table-column>
                     <el-table-column  align='center'  v-for="(col,index) in cols" :key='index'   height='50px'  :prop="col.prop" :label="col.label" >               
                       </el-table-column>     
@@ -88,6 +89,7 @@ export default {
       m:0,
       fatherSelect:[],
       childSelect:[],
+      childAllChecked:[],
       // childCureentSelect:[],
       // fidChild:[],//{"fid":"","path":""}
       fid:""
@@ -142,27 +144,65 @@ export default {
         // console.log(4,this.fatherSelect, this.childSelect)
         bus.$emit("checkeFun", this.fatherSelect, this.childSelect);
       },
+      //全选
+      selectAllChildren(val){ 
+        //全部选中
+        if(val.length>0){
+          //如果已经选中，不添加进去
+          //未选中，则添加进去
+          // for(var i = 0; i < val.length; i++){
+          //     val[i]._id = this.fid
+          //     this.childSelect.push(val[i])
+          // }
+            let flag = false;
+            for(let i=0;i<val.length;i++){
+                flag = false;
+                for(let j=0;j<this.childSelect.length;j++){
+                    if( this.fid==this.childSelect[j]['_id'] && val[i].path==this.childSelect[j].path ){
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if(!flag){
+                    val[i]['_id']=this.fid
+                    this.childSelect.push(val[i])
+                }
+            }
+        //取消选中
+        }else{
+          //无数据，所以根据fid，删除所有属性中_id等于fid的数据
+          //数组索引删除记住倒叙循环根据索引删除
+             for(var i = this.childSelect.length-1; i >=0; i--){
+               if(this.fid== this.childSelect[i]['_id']){
+                  this.childSelect.splice(i, 1);   
+               }
+          }
+          
+        }
+        console.log('111111',this.childSelect)
+       bus.$emit("checkeFun", this.fatherSelect, this.childSelect);
+        // console.log("kk",this.fatherSelect, this.childSelect)
+      },
       //table复选框改变事件
       changeCheckeds(id){
         this.fid = id;
       },
       changeCheckedid(val,row){
         let flag =-1;
+        // console.log(this.childSelect)
         for(let i=0;i<this.childSelect.length;i++ ){
             if(this.childSelect[i].path==row.path){
               flag=i;
               break;
             }
         }
-
         if(flag>-1){
           this.childSelect.splice(flag, 1);
         }else{
           row['_id']=this.fid
           this.childSelect.push(row)
         }
-
-        console.log(3,this.fatherSelect, this.childSelect)
         bus.$emit("checkeFun", this.fatherSelect, this.childSelect);
       },
         //分页中每行显示的多少数据的事件
@@ -184,7 +224,6 @@ export default {
         editSubmit(){
           alert(this.m)
           if("edit"){
-
           }else if("del"){
 
           }

@@ -47,7 +47,7 @@ export default {
         //在search中调用的
         bus.$on("checkeFun", function(fatherSelect, childSelect) {
             //  _this.fatherSelect = msg;
-            console.log(11,fatherSelect,childSelect)
+            // console.log(11,fatherSelect,childSelect)
              _this.fatherSelect = fatherSelect;
              _this.childSelect = childSelect;
         });
