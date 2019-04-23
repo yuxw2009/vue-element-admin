@@ -35,7 +35,7 @@ export default {
     watch:{
         editData:{
             handler(n,o){
-                console.log(this.editData)
+                // console.log(22,this.editData)
                 this.dialogSuccessData = this.editData;
             }
         }
@@ -43,7 +43,7 @@ export default {
     methods:{
         //打开弹窗事件
         openDialog(clickType,name){
-            this.dialogSuccessData = {}
+            // this.dialogSuccessData = {}
             this.setAddVisible = true;
             this.dialogTitle = name
         },

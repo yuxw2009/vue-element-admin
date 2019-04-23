@@ -47,6 +47,7 @@ export default {
         //在search中调用的
         bus.$on("checkeFun", function(fatherSelect, childSelect) {
             //  _this.fatherSelect = msg;
+            console.log(11,fatherSelect,childSelect)
              _this.fatherSelect = fatherSelect;
              _this.childSelect = childSelect;
         });
@@ -58,6 +59,7 @@ export default {
             this.opt=clickType;
             if(clickType=='add'){   
               //修改功能                  
+                this.editData = {}
                 this.$refs.dialog.openDialog(clickType,name); 
             }else{
 
@@ -152,7 +154,11 @@ export default {
 
 
             }else{
-                // obj.attrs['_id'] = this.childSelect[0]['_id'] 
+                this.editData = this.childSelect[0]
+                console.log(this.editData)
+                //打开弹出层，获取默认值
+                this.$refs.dialog.openDialog(clickType,name);
+                
             }
         },
         formSubmit(formData){
@@ -194,6 +200,67 @@ export default {
                         }
                     })
                 }else{
+                    //获取父级数据
+                    let objNew = JSON.stringify(this.getUpdateDataParams);
+                    let obj = JSON.parse(objNew);
+                    obj.attrs['_id'] = formData._id
+                    console.log(JSON.stringify(obj))
+
+                    getCommonFun(JSON.stringify(obj)).then(res=>{          
+                      
+                        if(res.data.result=='ok'){
+                            
+                            //替换修改的子集数据
+                            let fdata = res.data.data[0]
+                            let child = fdata.children;
+                            // let flag=-1;
+                            for(let i=0;i<child.length;i++ ){
+                                if(child[i].path==formData.path){
+                                    delete formData['_id']
+                                    child[i]=formData;
+                                    // flag=i;
+                                    break;
+                                }
+                            }
+                            // fdata.children = child;
+                            // if(flag>-1){
+                            //     //删除旧数据
+                            //     child.splice(flag, 1);
+                            //     //插入新数据
+                            // }
+                            //更新
+                            //打开弹出层，获取默认值
+                            // this.$refs.dialog.openDialog(clickType,name);
+
+                            // console.log(9,JSON.stringify(fdata))
+                            objNew = JSON.stringify(this.updateFormParams);
+                            obj = JSON.parse(objNew);
+                            obj.attrs['_id'] = fdata._id
+                            // delete formData['_id'];
+                            obj.updates= {
+                                "children": child
+                            };
+                            console.log(JSON.stringify(obj))
+                            // return false;
+                            updateCommonFun(JSON.stringify(obj)).then(res=>{          
+                                if(res.data.result=='ok'){
+                                    console.log(res.data)
+                                    //调用父级函数刷新表格
+                                    this.$emit('fatherMethod');
+                                        
+                                    //调用弹窗函数关闭弹出层
+                                    this.$refs.dialog.dialogCancel(); 
+                                }
+                            })
+                        
+                        }
+                    }) 
+
+                    
+
+                    // let objNew = JSON.stringify(this.updateFormParams);
+                    // let obj = JSON.parse(objNew);
+                    // obj.attrs['_id'] = formData._id
                     
                 }
 
