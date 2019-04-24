@@ -159,7 +159,7 @@ export default {
             for(let i=0;i<val.length;i++){
                 flag = false;
                 for(let j=0;j<this.childSelect.length;j++){
-                    if( this.fid==this.childSelect[j]['_id'] && val[i].path==this.childSelect[j].path ){
+                    if(this.fid==this.childSelect[j]['_id'] && val[i].path==this.childSelect[j].path && this.childSelect[j].label==val[i].label){
                         flag = true;
                         break;
                     }
@@ -191,7 +191,7 @@ export default {
         let flag =-1;
         // console.log(this.childSelect)
         for(let i=0;i<this.childSelect.length;i++ ){
-            if(this.childSelect[i].path==row.path  &&  this.childSelect[i].name==row.name){
+            if(this.childSelect[i].path==row.path  &&  this.childSelect[i].label==row.label){
               flag=i;
               break;
             }

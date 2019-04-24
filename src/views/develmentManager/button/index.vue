@@ -123,9 +123,10 @@ export default {
             }
         },
         delOpen(clickType,name){
-             let objNew = JSON.stringify(this.delFormParams);
-                    let obj = JSON.parse(objNew);
+                   
                     if(this.fatherSelect.length>0){
+                         let objNew = JSON.stringify(this.delFormParams);
+                        let obj = JSON.parse(objNew);
                         obj.attrs['_id'] = this.fatherSelect[0]['_id']
                         this.$confirm('此操作将永久删除该行, 是否继续?', '提示', {
                             confirmButtonText: '确定',
@@ -153,7 +154,7 @@ export default {
                         });
                     }else{
         
-                      
+                        //子table删除
                     
                           this.$confirm('此操作将永久删除该行, 是否继续?', '提示', {
                             confirmButtonText: '确定',
@@ -169,16 +170,15 @@ export default {
                                         let child = fdata.children;                             
                                         // let flag=-1;
                                         for(let i=child.length-1;i>=0;i-- ){
-                                            if(child[i].path==this.childSelect[0].path && child[i].name==this.childSelect[0].name){
+                                            if(child[i].path==this.childSelect[0].path && child[i].label==this.childSelect[0].label){
                                                 child.splice(i, 1);
-                                                
+                                                break;
                                             }                                 
                                         }                          
                                         objNew = JSON.stringify(this.updateFormParams);
                                         obj = JSON.parse(objNew);
                                         console.log(this.childSelect[0]['_id'])
                                         obj.attrs['_id'] =  this.childSelect[0]['_id']
-
                                         obj.updates= {
                                             "children": child
                                         };
@@ -251,7 +251,7 @@ export default {
                             let child = fdata.children;
                             // let flag=-1;
                             for(let i=0;i<child.length;i++ ){
-                                if(child[i].path==formData.path && child[i].name==formData.name ){
+                                if(child[i].path==formData.path && child[i].label==formData.label){
                                     delete formData['_id']
                                     child[i]=formData;
                                     // flag=i;

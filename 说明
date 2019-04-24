@@ -106,7 +106,7 @@ prop:字段属性名称
 label：显示名称
 
 http://192.168.1.236:3000/getdocument
-req：{"table":"test","attrs":{}}
+req：{"table":"test","attrs":{},"sorts":{a:1}}  //1 升序  -1 降序
 ack：
 list：[{
     'name':'王小虎',

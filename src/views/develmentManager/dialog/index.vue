@@ -35,13 +35,15 @@ export default {
         editData:{
             handler(n,o){
                 this.dialogSuccessData = this.editData;
+                console.log(this.dialogSuccessData)
+                console.log(this.coverFormList)
             }
         }
     },
     methods:{
         //打开弹窗事件
         openDialog(clickType,name){
-            // this.dialogSuccessData = {}
+            this.dialogSuccessData = {}
             this.setAddVisible = true;
             this.dialogTitle = name
         },
