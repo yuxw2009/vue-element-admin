@@ -7,18 +7,19 @@
             </el-button> 
         </div>
        <Dialog ref='dialog' :coverFormList='coverFormList' :editData='editData' @formSubmit='formSubmit'  ></Dialog>
-    </div>
-    
+       <configureDialog ref='configureDialog'></configureDialog>
+    </div>  
 </template>
-
 <script>
 import bus from '@/main.js'
 import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
 import Dialog from '../dialog'
+import configureDialog from '../configureDialog'
 export default {
     props:['tableName','coverFormList'],
     components:{
-        Dialog
+        Dialog,
+        configureDialog
     },
     data(){
         return{
@@ -90,6 +91,16 @@ export default {
                     
 
                  }else if(clickType=='device'){
+                     if(this.childSelect.length==0){
+                          this.$message({
+                            message: '请选择一条子级菜单',
+                            type: 'warning'
+                        });
+                        return false;
+                     }
+                    this.$refs.configureDialog.openDialog(this.childSelect[0].tableName); 
+
+                    
 
                 
                 }
@@ -155,7 +166,6 @@ export default {
                     }else{
         
                         //子table删除
-                    
                           this.$confirm('此操作将永久删除该行, 是否继续?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
@@ -267,7 +277,7 @@ export default {
                             //更新
                             //打开弹出层，获取默认值
                             // this.$refs.dialog.openDialog(clickType,name);
-
+                            // console.log(2,child)
                             // console.log(9,JSON.stringify(fdata))
                             objNew = JSON.stringify(this.updateFormParams);
                             obj = JSON.parse(objNew);
