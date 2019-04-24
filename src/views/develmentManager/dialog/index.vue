@@ -19,7 +19,6 @@
         </el-form>
       </el-dialog>
 </template>
-
 <script>
 export default {
     props:['coverFormList','editData'],
@@ -35,7 +34,6 @@ export default {
     watch:{
         editData:{
             handler(n,o){
-                // console.log(22,this.editData)
                 this.dialogSuccessData = this.editData;
             }
         }

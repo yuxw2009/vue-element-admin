@@ -25,6 +25,7 @@
           tableName:'',
           coverFormList:[               
                 {"modelType":"test","prop": "label","label": "菜单名称","insert":true,"update":true,"ord":1,"formType":"text"},
+                {"modelType":"test","prop": "meta.title","label": "名称映射","insert":true,"update":true,"ord":6,"formType":"text"},
                 {"modelType":"test","prop": "path","label": "菜单路径","insert":true,"update":true,"ord":2,"formType":"text"},
                 {"modelType":"test","prop": "component","label": "组件","insert":true,"update":true,"ord":3,"formType":"text"},
                 {"modelType":"test","prop": "menuType","label": "模板类型","insert":true,"update":true,"ord":4,"formType":"text"},

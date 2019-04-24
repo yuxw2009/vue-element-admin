@@ -10,14 +10,14 @@
       style="width: 100%;"
      @selection-change="changeChecked"
      >  
-     <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column type="expand" label=" " width="60">
+     <el-table-column type="selection" width="50" align='center' ></el-table-column>
+        <el-table-column type="expand" label=" "  align='center' width="60">
         <template slot-scope="props">
           <el-row class="filter-container" style="margin-bottom: 20px" >
             <el-col   class="demo-table-expand" >
               <el-table ref="crudTable" v-loading="listLoading" :data="props.row.children" size="mini" border  label-position="left"  inline 
               @select="changeCheckedid"   @selection-change="changeCheckeds(props.row._id)"   @select-all='selectAllChildren'>
-                <el-table-column type="selection" label=" " width="60"></el-table-column>
+                <el-table-column type="selection" label=" " align='center' width="50"></el-table-column>
                     <el-table-column  align='center'  v-for="(col,index) in cols" :key='index'   height='50px'  :prop="col.prop" :label="col.label" >               
                       </el-table-column>     
               </el-table>
@@ -71,6 +71,7 @@ export default {
         tableDataList:[],
         cols:  [
               {"modelType":"test",prop: 'label', label: '菜单名称'},
+               {"modelType":"test",prop: 'meta.title', label: '名称映射'},
               {"modelType":"test",prop: 'path', label: '菜单路径'},
                {"modelType":"test",prop: 'component', label: '组件'},
                {"modelType":"test",prop: 'menuType', label: '模板类型'},
@@ -163,7 +164,6 @@ export default {
                         break;
                     }
                 }
-
                 if(!flag){
                     val[i]['_id']=this.fid
                     this.childSelect.push(val[i])
@@ -180,7 +180,6 @@ export default {
           }
           
         }
-        console.log('111111',this.childSelect)
        bus.$emit("checkeFun", this.fatherSelect, this.childSelect);
         // console.log("kk",this.fatherSelect, this.childSelect)
       },
@@ -192,7 +191,7 @@ export default {
         let flag =-1;
         // console.log(this.childSelect)
         for(let i=0;i<this.childSelect.length;i++ ){
-            if(this.childSelect[i].path==row.path){
+            if(this.childSelect[i].path==row.path  &&  this.childSelect[i].name==row.name){
               flag=i;
               break;
             }

@@ -46,8 +46,6 @@ export default {
         var  _this = this;
         //在search中调用的
         bus.$on("checkeFun", function(fatherSelect, childSelect) {
-            //  _this.fatherSelect = msg;
-            // console.log(11,fatherSelect,childSelect)
              _this.fatherSelect = fatherSelect;
              _this.childSelect = childSelect;
         });
@@ -55,7 +53,6 @@ export default {
     methods:{
         //打开弹窗
         opneCover(clickType,name){
-            console.log(this.fatherSelect, this.childSelect)
             this.opt=clickType;
             if(clickType=='add'){   
               //修改功能                  
@@ -65,48 +62,19 @@ export default {
 
                 if(!(this.fatherSelect.length + this.childSelect.length==1)){
                     this.$message({
-                        message: '请选择一条，需要修改的记录',
+                        message: '请选择一条，需要操作的记录',
                         type: 'warning'
                     });
                     return false;
                 }
                  if(clickType=='edit'){
-                     this.editOpen(clickType,name);
-                 }else if(clickType=='del'){
-                    let objNew = JSON.stringify(this.delFormParams);
-                    let obj = JSON.parse(objNew);
-                    if(this.fatherSelect.length>0){
-                        obj.attrs['_id'] = this.fatherSelect[0]['_id']
 
-                        this.$confirm('此操作将永久删除该行, 是否继续?', '提示', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }).then(() => {
-                            console.log(JSON.stringify(obj))
-                            deleteCommonFun(JSON.stringify(obj)).then(res=>{ 
-                                if(res.data.result=='ok'){
-                                    this.$message({
-                                        type: 'success',
-                                        message: '删除成功!'
-                                    });
-                                     this.$emit('fatherMethod');
-                                    // bus.$emit("tableFun");
-                                
-                                }
-                                    
-                            })
-                        
-                        }).catch(() => {
-                        // this.$message({
-                        //   type: 'info',
-                        //   message: '已取消删除'
-                        // });          
-                        });
-                    }else{
-                        obj.attrs['_id'] = this.childSelect[0]['_id'] 
-                    }
-        
+                     this.editOpen(clickType,name);
+
+                 }else if(clickType=='del'){
+
+                     this.delOpen(clickType,name)
+                   
                  }else if(clickType=='addChildren'){
                     if(!(this.fatherSelect.length==1 && this.childSelect.length==0)){
                         this.$message({
@@ -136,18 +104,13 @@ export default {
                     let objNew = JSON.stringify(this.getUpdateDataParams);
                      let obj = JSON.parse(objNew);
                     obj.attrs['_id'] = this.fatherSelect[0]['_id']
-                    console.log(JSON.stringify(obj))
-
                     getCommonFun(JSON.stringify(obj)).then(res=>{          
                       
                         if(res.data.result=='ok'){
                             
                             this.editData = res.data.data[0]
-                            console.log(this.editData)
                             //打开弹出层，获取默认值
                             this.$refs.dialog.openDialog(clickType,name);
-
-
                         
                         }
                     }) 
@@ -155,11 +118,91 @@ export default {
 
             }else{
                 this.editData = this.childSelect[0]
-                console.log(this.editData)
                 //打开弹出层，获取默认值
-                this.$refs.dialog.openDialog(clickType,name);
-                
+                this.$refs.dialog.openDialog(clickType,name);               
             }
+        },
+        delOpen(clickType,name){
+             let objNew = JSON.stringify(this.delFormParams);
+                    let obj = JSON.parse(objNew);
+                    if(this.fatherSelect.length>0){
+                        obj.attrs['_id'] = this.fatherSelect[0]['_id']
+                        this.$confirm('此操作将永久删除该行, 是否继续?', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+                            deleteCommonFun(JSON.stringify(obj)).then(res=>{ 
+                                if(res.data.result=='ok'){
+                                    this.$message({
+                                        type: 'success',
+                                        message: '删除成功!'
+                                    });
+                                     this.$emit('fatherMethod');
+                                    // bus.$emit("tableFun");
+                                
+                                }
+                                    
+                            })
+                        
+                        }).catch(() => {
+                        // this.$message({
+                        //   type: 'info',
+                        //   message: '已取消删除'
+                        // });          
+                        });
+                    }else{
+        
+                      
+                    
+                          this.$confirm('此操作将永久删除该行, 是否继续?', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+                                let objNew = JSON.stringify(this.getUpdateDataParams);
+                                let obj = JSON.parse(objNew);
+                                obj.attrs['_id'] = this.childSelect[0]['_id'] 
+                                getCommonFun(JSON.stringify(obj)).then(res=>{                                                                         
+                                        //替换修改的子集数据
+                                        let fdata = res.data.data[0]
+                                        let child = fdata.children;                             
+                                        // let flag=-1;
+                                        for(let i=child.length-1;i>=0;i-- ){
+                                            if(child[i].path==this.childSelect[0].path && child[i].name==this.childSelect[0].name){
+                                                child.splice(i, 1);
+                                                
+                                            }                                 
+                                        }                          
+                                        objNew = JSON.stringify(this.updateFormParams);
+                                        obj = JSON.parse(objNew);
+                                        console.log(this.childSelect[0]['_id'])
+                                        obj.attrs['_id'] =  this.childSelect[0]['_id']
+
+                                        obj.updates= {
+                                            "children": child
+                                        };
+                                        // console.log(updateFormParams)
+                                        updateCommonFun(JSON.stringify(obj)).then(res=>{          
+                                            if(res.data.result=='ok'){
+                                                //调用父级函数刷新表格
+                                                this.$emit('fatherMethod');
+                                                    
+                                                //调用弹窗函数关闭弹出层
+                                                this.$refs.dialog.dialogCancel(); 
+                                            }
+                                        })
+                                    
+                                    
+                                }) 
+                        
+                        }).catch(() => {
+                        // this.$message({
+                        //   type: 'info',
+                        //   message: '已取消删除'
+                        // });          
+                        });
+                    }
         },
         formSubmit(formData){
             console.log(formData)
@@ -170,7 +213,6 @@ export default {
                 // console.log(JSON.stringify(obj))
                 // return false;
                 addCommonFun(JSON.stringify(obj)).then(res=>{          
-                    console.log(res)     
                     if(res.data.result=='ok'){
                         //调用父级函数刷新表格
                          this.$emit('fatherMethod');
@@ -179,19 +221,16 @@ export default {
                         this.$refs.dialog.dialogCancel(); 
                     }
                 })    
-            }else if(this.opt=='edit'){
-                
+            }else if(this.opt=='edit'){          
                 if(this.fatherSelect.length>0){
                     let objNew = JSON.stringify(this.updateFormParams);
                     let obj = JSON.parse(objNew);
                     obj.attrs['_id'] = formData._id
                     delete formData['_id'];
                     obj.updates= formData;
-                    console.log(JSON.stringify(obj))
                     // return false;
                     updateCommonFun(JSON.stringify(obj)).then(res=>{          
                         if(res.data.result=='ok'){
-                            console.log(res.data)
                             //调用父级函数刷新表格
                             this.$emit('fatherMethod');
                                 
@@ -204,10 +243,7 @@ export default {
                     let objNew = JSON.stringify(this.getUpdateDataParams);
                     let obj = JSON.parse(objNew);
                     obj.attrs['_id'] = formData._id
-                    console.log(JSON.stringify(obj))
-
-                    getCommonFun(JSON.stringify(obj)).then(res=>{          
-                      
+                    getCommonFun(JSON.stringify(obj)).then(res=>{                      
                         if(res.data.result=='ok'){
                             
                             //替换修改的子集数据
@@ -215,7 +251,7 @@ export default {
                             let child = fdata.children;
                             // let flag=-1;
                             for(let i=0;i<child.length;i++ ){
-                                if(child[i].path==formData.path){
+                                if(child[i].path==formData.path && child[i].name==formData.name ){
                                     delete formData['_id']
                                     child[i]=formData;
                                     // flag=i;
@@ -240,11 +276,9 @@ export default {
                             obj.updates= {
                                 "children": child
                             };
-                            console.log(JSON.stringify(obj))
                             // return false;
                             updateCommonFun(JSON.stringify(obj)).then(res=>{          
                                 if(res.data.result=='ok'){
-                                    console.log(res.data)
                                     //调用父级函数刷新表格
                                     this.$emit('fatherMethod');
                                         
@@ -272,7 +306,6 @@ export default {
                 let objNew = JSON.stringify(this.getUpdateDataParams);
                 let obj = JSON.parse(objNew);
                 obj.attrs['_id'] = this.fatherSelect[0]['_id']
-                console.log(JSON.stringify(obj))
 
                 getCommonFun(JSON.stringify(obj)).then(res=>{          
                     
@@ -283,18 +316,15 @@ export default {
                             res.data.data[0].children= []
                         }
                         res.data.data[0].children.push(formData)
-                        console.log(res.data.data[0])
 
                         let objNew = JSON.stringify(this.updateFormParams);
                         let obj = JSON.parse(objNew);
                         obj.attrs['_id'] = res.data.data[0]._id
                         delete res.data.data[0]['_id'];
                         obj.updates= res.data.data[0];
-                        console.log(JSON.stringify(obj))
                         // return false;
                         updateCommonFun(JSON.stringify(obj)).then(res=>{          
                             if(res.data.result=='ok'){
-                                console.log(res.data)
                                 //调用父级函数刷新表格
                                 this.$emit('fatherMethod');
                                     
