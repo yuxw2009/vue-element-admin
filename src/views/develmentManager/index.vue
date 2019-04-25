@@ -2,8 +2,8 @@
   <div class="app-container">
     <!-- 搜索 -->
      <!-- <Search  :tableName='tableName'></Search> -->
-     <Button  :coverFormList='coverFormList' :tableName='tableName'   @fatherMethod="fatherButtonMethod"></Button>
-     <Table   ref='table' :coverFormList='coverFormList' :tableName='tableName' ></Table>
+     <Button  :coverFormList='coverFormList' :childFormList='childFormList' :tableName='tableName'   @fatherMethod="fatherButtonMethod"></Button>
+     <Table   ref='table' :coverFormList='coverFormList' :childFormList='childFormList'  :tableName='tableName' ></Table>
    </div>
 </template>
 <script>
@@ -23,16 +23,25 @@
           urlJurisdiction:[],
           currentRouterPath:'',
           tableName:'',
-          coverFormList:[               
-                {"modelType":"test","prop": "label","label": "菜单名称","insert":true,"update":true,"ord":1,"formType":"text"},
-                {"modelType":"test","prop": "meta.title","label": "名称映射","insert":true,"update":true,"ord":6,"formType":"text"},
-                {"modelType":"test","prop": "path","label": "菜单路径","insert":true,"update":true,"ord":2,"formType":"text"},
-                {"modelType":"test","prop": "component","label": "组件","insert":true,"update":true,"ord":3,"formType":"text"},
-                {"modelType":"test","prop": "menuType","label": "模板类型","insert":true,"update":true,"ord":4,"formType":"text"},
-                {"modelType":"test","prop": "tableName","label": "表名","insert":true,"update":true,"ord":5,"formType":"text"},
-                {"modelType":"test","prop": "meta.icon","label": "图标","insert":true,"update":true,"ord":6,"formType":"text"},
-                {"modelType":"test","prop": "alwaysShow","label": "显示状态","insert":true,"update":true,"ord":7,"formType":"text"},
-          ],      
+          coverFormList:[  
+            {"modelType":"test","prop": "path","label": "菜单路径","insert":true,"update":true,"ord":2,"formType":"text"},
+            {"modelType":"test","prop": "component","label": "组件","insert":true,"update":true,"ord":3,"formType":"text"},
+            {"modelType":"test","prop": "redirect","label": "重定向","insert":true,"update":true,"ord":8,"formType":"text"},
+            {"modelType":"test","prop": "alwaysShow","label": "显示状态","insert":true,"update":true,"ord":7,"formType":"text"},
+            {"modelType":"test","prop": "label","label": "菜单名称","insert":true,"update":true,"ord":1,"formType":"text"},
+            {"modelType":"test","prop": "meta.title","label": "名称映射","insert":true,"update":true,"ord":6,"formType":"text"},
+            {"modelType":"test","prop": "meta.icon","label": "图标","insert":true,"update":true,"ord":6,"formType":"text"}
+          ],
+          childFormList:[               
+            {"modelType":"test","prop": "path","label": "菜单路径","insert":true,"update":true,"ord":2,"formType":"text"},
+            {"modelType":"test","prop": "component","label": "组件","insert":true,"update":true,"ord":3,"formType":"text"},
+            {"modelType":"test","prop": "name","label": "组件名称","insert":true,"update":true,"ord":8,"formType":"text"},
+            {"modelType":"test","prop": "label","label": "菜单名称","insert":true,"update":true,"ord":1,"formType":"text"},
+            {"modelType":"test","prop": "meta.title","label": "名称映射","insert":true,"update":true,"ord":6,"formType":"text"},
+            {"modelType":"test","prop": "meta.icon","label": "图标","insert":true,"update":true,"ord":6,"formType":"text"},
+            {"modelType":"test","prop": "menuType","label": "模板类型","insert":true,"update":true,"ord":4,"formType":"text"},
+            {"modelType":"test","prop": "tableName","label": "表名","insert":true,"update":true,"ord":5,"formType":"text"}
+          ]
         }
       },
       created() {

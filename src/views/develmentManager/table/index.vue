@@ -18,7 +18,7 @@
               <el-table ref="crudTable" v-loading="listLoading" :data="props.row.children" size="mini" border  label-position="left"  inline 
               @select="changeCheckedid"   @selection-change="changeCheckeds(props.row._id)"   @select-all='selectAllChildren'>
                 <el-table-column type="selection" label=" " align='center' width="50"></el-table-column>
-                    <el-table-column  align='center'  v-for="(col,index) in cols" :key='index'   height='50px'  :prop="col.prop" :label="col.label" >               
+                    <el-table-column  align='center'  v-for="(col,index) in childFormList" :key='index'   height='50px'  :prop="col.prop" :label="col.label" >               
                       </el-table-column>     
               </el-table>
             </el-col>
@@ -27,7 +27,7 @@
         </template>
       </el-table-column>
       
-       <el-table-column  align='center' v-for="(col,index) in cols" :key='index'  height='30px'  :prop="col.prop" :label="col.label" ></el-table-column>
+       <el-table-column  align='center' v-for="(col,index) in coverFormList" :key='index'  height='30px'  :prop="col.prop" :label="col.label" ></el-table-column>
       <!-- <el-table-column label="操作"  align='center' width='400px'>
           <template slot-scope="scope" >  
             <div  v-for = '(item,index) in  tableRowButton' :key='index' >
@@ -48,7 +48,7 @@ import bus from '@/main.js'
 import Dialog from '../dialog'
 import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
 export default {
-  props:['tableName','coverFormList'],
+  props:['tableName','coverFormList',"childFormList"],
   components:{
     Dialog
   },
@@ -69,16 +69,16 @@ export default {
         listLoading: false,
         //table数据
         tableDataList:[],
-        cols:  [
-              {"modelType":"test",prop: 'label', label: '菜单名称'},
-               {"modelType":"test",prop: 'meta.title', label: '名称映射'},
-              {"modelType":"test",prop: 'path', label: '菜单路径'},
-               {"modelType":"test",prop: 'component', label: '组件'},
-               {"modelType":"test",prop: 'menuType', label: '模板类型'},
-               {"modelType":"test",prop: 'tableName', label: '表名'},
-              {"modelType":"test",prop: 'meta.icon', label: '图标'},
-              {"modelType":"test",prop: 'alwaysShow', label: '显示状态'},
-       ],    
+      //   cols:  [
+      //         {"modelType":"test",prop: 'label', label: '菜单名称'},
+      //          {"modelType":"test",prop: 'meta.title', label: '名称映射'},
+      //         {"modelType":"test",prop: 'path', label: '菜单路径'},
+      //          {"modelType":"test",prop: 'component', label: '组件'},
+      //          {"modelType":"test",prop: 'menuType', label: '模板类型'},
+      //          {"modelType":"test",prop: 'tableName', label: '表名'},
+      //         {"modelType":"test",prop: 'meta.icon', label: '图标'},
+      //         {"modelType":"test",prop: 'alwaysShow', label: '显示状态'},
+      //  ],    
         listQuery: {
           curpage: 1,
           page_num: 10,

@@ -6,7 +6,7 @@
              class="filter-item"  :icon ='item.icon' style="margin-left: 10px;" :type="item.colorType" :ord='item.ord'   @click='opneCover(item.clickType,item.name)' >{{item.name}}
             </el-button> 
         </div>
-       <Dialog ref='dialog' :coverFormList='coverFormList' :editData='editData' @formSubmit='formSubmit'  ></Dialog>
+       <Dialog ref='dialog' :formLists='formLists' :editData='editData' @formSubmit='formSubmit'  ></Dialog>
        <configureDialog ref='configureDialog'></configureDialog>
     </div>  
 </template>
@@ -16,7 +16,7 @@ import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/t
 import Dialog from '../dialog'
 import configureDialog from '../configureDialog'
 export default {
-    props:['tableName','coverFormList'],
+    props:['tableName','coverFormList','childFormList'],
     components:{
         Dialog,
         configureDialog
@@ -38,10 +38,12 @@ export default {
                  {"modelType":"test","name":"配置属性","icon":"el-icon-zoom-in","colorType":"primary","ord":5,"clickType":'device'}          
             ],
             opt:"",
-            editData:{}
+            editData:{},
+            formLists:[]
         }
     },
     created(){
+        // this.formLists = this.coverFormList;
     },
      mounted(){
         var  _this = this;
@@ -57,7 +59,10 @@ export default {
             this.opt=clickType;
             if(clickType=='add'){   
               //修改功能                  
+                
+                this.formLists = this.coverFormList;
                 this.editData = {}
+                console.log(3,this.formLists)
                 this.$refs.dialog.openDialog(clickType,name); 
             }else{
 
@@ -84,6 +89,7 @@ export default {
                         });
                         return false;
                     }
+                    this.formLists = this.childFormList;
                     this.$refs.dialog.openDialog(clickType,name); 
                     
                     //打开弹出层
@@ -119,7 +125,9 @@ export default {
                       
                         if(res.data.result=='ok'){
                             
+                            this.formLists = this.coverFormList;
                             this.editData = res.data.data[0]
+
                             //打开弹出层，获取默认值
                             this.$refs.dialog.openDialog(clickType,name);
                         
@@ -128,6 +136,7 @@ export default {
 
 
             }else{
+                this.formLists = this.childFormList;
                 this.editData = this.childSelect[0]
                 //打开弹出层，获取默认值
                 this.$refs.dialog.openDialog(clickType,name);               
@@ -215,7 +224,6 @@ export default {
                     }
         },
         formSubmit(formData){
-            console.log(formData)
             if(this.opt=="add"){
                 let objNew = JSON.stringify(this.addFormParams);
                 let obj = JSON.parse(objNew);
@@ -254,14 +262,14 @@ export default {
                     let obj = JSON.parse(objNew);
                     obj.attrs['_id'] = formData._id
                     getCommonFun(JSON.stringify(obj)).then(res=>{                      
-                        if(res.data.result=='ok'){
-                            
+                        if(res.data.result=='ok'){                  
                             //替换修改的子集数据
                             let fdata = res.data.data[0]
                             let child = fdata.children;
                             // let flag=-1;
+                        
                             for(let i=0;i<child.length;i++ ){
-                                if(child[i].path==formData.path && child[i].label==formData.label){
+                                if(child[i].path==formData.path ){                            
                                     delete formData['_id']
                                     delete formData['alwaysShow']
                                     child[i]=formData;
@@ -269,17 +277,6 @@ export default {
                                     break;
                                 }
                             }
-                            // fdata.children = child;
-                            // if(flag>-1){
-                            //     //删除旧数据
-                            //     child.splice(flag, 1);
-                            //     //插入新数据
-                            // }
-                            //更新
-                            //打开弹出层，获取默认值
-                            // this.$refs.dialog.openDialog(clickType,name);
-                            // console.log(2,child)
-                            // console.log(9,JSON.stringify(fdata))
                             objNew = JSON.stringify(this.updateFormParams);
                             obj = JSON.parse(objNew);
                             obj.attrs['_id'] = fdata._id
@@ -287,7 +284,6 @@ export default {
                             obj.updates= {
                                 "children": child
                             };
-                            // return false;
                             updateCommonFun(JSON.stringify(obj)).then(res=>{          
                                 if(res.data.result=='ok'){
                                     //调用父级函数刷新表格
@@ -312,16 +308,13 @@ export default {
 
             }else if(this.opt=='addChildren'){
                 //提交数据，获取数据
-
-                    //查询选中的父级数据
+                //查询选中的父级数据
                 let objNew = JSON.stringify(this.getUpdateDataParams);
                 let obj = JSON.parse(objNew);
                 obj.attrs['_id'] = this.fatherSelect[0]['_id']
 
-                getCommonFun(JSON.stringify(obj)).then(res=>{          
-                    
-                    if(res.data.result=='ok'){
-                        
+                getCommonFun(JSON.stringify(obj)).then(res=>{                             
+                    if(res.data.result=='ok'){                     
                         // this.editData = 
                         if(!res.data.data[0].hasOwnProperty('children')){
                             res.data.data[0].children= []

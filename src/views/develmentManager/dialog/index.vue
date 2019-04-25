@@ -1,7 +1,7 @@
 <template>
      <el-dialog :title="dialogTitle" :visible.sync="setAddVisible" width="500px">
         <el-form  label-width="80px">
-            <div v-for='(item,index) in coverFormList'  :key='index'>
+            <div v-for='(item,index) in formList'  :key='index'>
                 <el-form-item   v-if="item.formType=='text'"    :label="item.label">
                 <el-input v-model="dialogSuccessData[item.prop]" size="small" />
                 </el-form-item>  
@@ -21,12 +21,13 @@
 </template>
 <script>
 export default {
-    props:['coverFormList','editData'],
+    props:['formLists','editData'],
     data(){
         return{
             dialogTitle:'',
             setAddVisible:false,
-            dialogSuccessData:{}
+            dialogSuccessData:{},
+            formList:[]
         }
     },
     created(){
@@ -36,7 +37,14 @@ export default {
             handler(n,o){
                 this.dialogSuccessData = this.editData;
                 console.log(this.dialogSuccessData)
-                console.log(this.coverFormList)
+                // console.log(this.coverFormList)
+            }
+        },
+        formLists:{
+            handler(n,o){
+                this.formList = this.formLists;
+                console.log(2,this.formList)
+                // console.log(this.coverFormList)
             }
         }
     },

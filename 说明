@@ -86,9 +86,7 @@ result:url返回格式（success or fail）
 
 3、table列（手动输入）
 
-
 详细：表名：columnConf
-
 api：查询
 http://192.168.1.236:3000/document
 req：{"table":"columnConf","attrs":{"modelType":"test"}}
@@ -244,3 +242,19 @@ tableName（mongo模板、mysql模板对应的表名）
         ]
     }
 ]
+
+1 上传版本文件到服务器
+post /upload_ver.yaws
+文件form表单
+
+2 获取版本文件列表
+post api/nhome/get_version_file_list
+conditions:[]
+3  獲取所有設備列表  http://priv.x9water.com:18080/
+get api/nhome/get_online_devices_verinfo
+无参数
+返回： {dev_id:d,newest_filename:"文件名",device_type:dt}
+4 版本下载接口
+post api/nhome/version/download
+req:      {dev_id:d,ver_filename:"文件名"}
+

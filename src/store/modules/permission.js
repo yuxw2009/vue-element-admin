@@ -2,6 +2,7 @@ import Cookies from 'js-cookie'
 import { asyncRoutes, constantRoutes } from '@/router'
 import router from '../../router';
 import { getCommonFun } from '@/api/tableCommom'
+// import getters from '../getters'
 
 
 /**
@@ -55,7 +56,6 @@ import { getCommonFun } from '@/api/tableCommom'
 // }
 
 function hasPermission(roles, route) { // route是路由的配置目前带父级有3个，roles是权限
-
     if (roles instanceof Array) {
         var role = roles
     } else {
@@ -80,14 +80,16 @@ const routerMap = {
     '/views/equipmentManage/index': () =>
         import ('@/views/equipmentManage/index'),
     '/views/develmentManager/index': () =>
-        import ('@/views/develmentManager/index')
+        import ('@/views/develmentManager/index'),
+    '/views/manager/index': () =>
+        import ('@/views/manager/index')
+
 }
 
 const urlJurisdiction = []
 
 export function filterAsyncRoutesTwo(routes, roles) {
     const res = []
-
     routes.forEach(route => {
             const tmp = {...route }
             if (hasPermission(roles, tmp)) {
@@ -130,14 +132,14 @@ const permission = {
     },
     actions: {
         GenerateRoutes({ commit }, data) {
-            console.log()
             return new Promise(resolve => {
                 const { roles } = data
-                let accessedRoutes
+                // let accessedRoutes
 
-                let allRoutes = Cookies.get('urlAllRouter')
-
-                accessedRoutes = filterAsyncRoutesTwo(JSON.parse(allRoutes), roles)
+                // let allRoutes = getters.user.allRoutes; //.user.allRoutes; //.length; // 
+                let allRoutes = data.allroutes; //Cookies.get('urlAllRouter')
+                // console.log('66666666666666', JSON.parse(allRoutes))
+                let accessedRoutes = filterAsyncRoutesTwo(allRoutes, roles)
                 Cookies.set('urlJurisdiction', urlJurisdiction)
                 commit('SET_ROUTES', accessedRoutes)
                 resolve(accessedRoutes)

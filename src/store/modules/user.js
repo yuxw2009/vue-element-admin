@@ -14,7 +14,8 @@ const user = {
         roles: [],
         setting: {
             articlePlatform: []
-        }
+        },
+        allroutes: []
     },
 
     mutations: {
@@ -41,6 +42,9 @@ const user = {
         },
         SET_ROLES: (state, roles) => {
             state.roles = roles
+        },
+        SET_ALLROUTES: (state, allroutes) => {
+            state.allroutes = allroutes
         }
     },
     actions: {
@@ -71,15 +75,19 @@ const user = {
                             commit('SET_TOKEN', data.result.right)
                             setToken(data.result.right)
                                 //调接口获取mogo接口地址
-                            getCommonFun(JSON.stringify({ "table": "menuConf", "attrs": {} })).then(res => {
-                                if (res.data.result == 'ok') {
-                                    Cookies.set('urlAllRouter', res.data.data)
-                                        // Cookies.set('urlJurisdiction', res.data.data)
-                                }
+                                // getCommonFun(JSON.stringify({ "table": "menuConf", "attrs": {} })).then(res => {
+                                //     if (res.data.result == 'ok') {
+                                //         console.log(22, JSON.stringify(res.data.data))
+                                //         commit('SET_ALLROUTES', res.data.data)
+                                //         console.log(44, user.state.allroutes)
+                                //         Cookies.set('urlAllRouter', JSON.stringify(res.data.data))
+                                //         console.log(33, Cookies.get('urlAllRouter'))
+                                //             // Cookies.set('urlJurisdiction', res.data.data)
+                                //     }
 
-                                resolve()
-                            })
-
+                            //     resolve()
+                            // })
+                            resolve()
                         }
                     } else {
                         alert(response.data.reason)
@@ -95,10 +103,20 @@ const user = {
             return new Promise((resolve, reject) => {
                 if (state.token) { // 验证返回的roles是否是一个非空数组
                     commit('SET_ROLES', state.token)
+                    getCommonFun(JSON.stringify({ "table": "menuConf", "attrs": {} })).then(res => {
+                        if (res.data.result == 'ok') {
+                            commit('SET_ALLROUTES', res.data.data)
+                                // Cookies.set('urlAllRouter', JSON.stringify(res.data.data))
+                                // Cookies.set('urlJurisdiction', res.data.data)
+                        }
+                        resolve(state.token)
+
+                    })
                 } else {
                     reject('getInfo: roles must be a non-null array!')
+                    resolve(state.token)
                 }
-                resolve(state.token)
+
             })
         },
         // 登出

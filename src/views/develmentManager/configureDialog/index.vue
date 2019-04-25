@@ -3,13 +3,12 @@
         <el-dialog title="配置属性" :visible.sync="setAddVisibles" width="1050px" >
             <el-form  label-width="80px">
                 <div class='item'>
-                    <el-form-item label="操作配置"></el-form-item>  
-                    <div class='cont'>
-                            <div class='button-cont'>
-                                <el-button size='mini' type="primary" @click="buttonDialog('添加','add')">添加</el-button> 
-                                <el-button size='mini' type="primary" @click="buttonDialog('编辑','update')">编辑</el-button>
-                                <el-button size='mini' type="primary" @click="buttonDialog('删除','del')">删除</el-button>
-                            </div>
+                    <el-form-item label="操作配置" class='button-cont'>
+                           <el-button size='mini' type="primary" @click="buttonDialog('添加','add')">添加</el-button> 
+                            <el-button size='mini' type="primary" @click="buttonDialog('编辑','update')">编辑</el-button>
+                            <el-button size='mini' type="primary" @click="buttonDialog('删除','del')">删除</el-button>
+                    </el-form-item>  
+                    <div class='cont'>                       
                             <el-table
                                 :data="buttontableData"
                                 @select='buttontableDataChange'
@@ -65,13 +64,14 @@
             </el-form> 
              <el-form  label-width="80px">
                 <div class='item'>
-                    <el-form-item label="基本配置"></el-form-item>  
-                    <div class='cont'>
-                        <div class='button-cont'>
+                    <el-form-item label="基本配置">
                             <el-button size='mini' type="primary" @click="optionButtonDialog('添加','add')">添加</el-button> 
                             <el-button size='mini' type="primary" @click="optionButtonDialog('编辑','update')">编辑</el-button>
                             <el-button size='mini' type="primary" @click="optionButtonDialog('删除','del')">删除</el-button>
-                        </div>
+                        
+                    </el-form-item>  
+                    <div class='cont'>        
+                         
                         <el-table :data="menuTableData" @select='menuTableDataChange'   height='250' border style="width: 100%">
                             <el-table-column align="center" type="selection"  width="55" ></el-table-column>
                             <el-table-column align="center" prop="modelType" label="模块"></el-table-column>
@@ -90,7 +90,7 @@
                 </div>
             </el-form>  
             <div style='margin-top:20px; text-align:center'>
-                    <el-button size='mini' align='center'  type="primary" @click="successGetData()">保存</el-button>         
+                    <el-button size='medium' align='center'  type="primary" @click="successGetData()">保存</el-button>         
             </div> 
         </el-dialog>
          <el-dialog :title="buttonDialogTitle" :visible.sync="buttonVisibles" width="500px" class='buttonDialog'>
@@ -424,7 +424,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+    .el-dialog__header{
+        padding:10px;
+    }
     .el-form-item{
         margin-bottom: 0px;
     }
@@ -437,6 +440,9 @@ export default {
    }
     .button-cont{
         margin-bottom: 10px
+    }
+    .el-dialog{
+        margin-top:5px !important;
     }
     .buttonDialog .el-form-item{
         margin-bottom:10px;
