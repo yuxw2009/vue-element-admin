@@ -1,0 +1,218 @@
+时间：2019.04.25 ：1.0.0
+描述：完成模板一
+mongo数据：
+
+1、baseOptionConf
+
+{
+    "result": "ok",
+    "count": 12,
+    "data": [
+        {
+            "_id": "5cb681c0706684544db12250",
+            "modelType": "test1",
+            "prop": "switchStatus",
+            "label": "switchStatus",
+            "insert": true,
+            "update": true,
+            "formType": "select",
+            "defaultValues": [
+                {
+                    "key": "男",
+                    "value": "男"
+                },
+                {
+                    "key": "女",
+                    "value": "女"
+                }
+            ]
+        },
+        {
+            "_id": "5cb68fe569c22f602ffc343c",
+            "modelType": "test1",
+            "prop": "switchStatus",
+            "label": "switchStatus",
+            "insert": true,
+            "update": true,
+            "formType": "select",
+            "defaultValues": [
+                {
+                    "key": "男",
+                    "value": "男"
+                },
+                {
+                    "key": "女",
+                    "value": "女"
+                }
+            ]
+        },
+        
+        {
+            "_id": "5cc1251f50855d73c48fa815",
+            "modelType": "test4",
+            "prop": "name",
+            "label": "名称",
+            "insert": "1",
+            "update": "1",
+            "search": "1",
+            "table": "1",
+            "ord": "1",
+            "formType": "text"
+        }
+    ]
+}
+
+2、buttonConf
+{
+    "result": "ok",
+    "count": 3,
+    "data": [
+        {
+            "_id": "5cc1251f50855d73c48fa812",
+            "modelType": "test4",
+            "name": "添加",
+            "colorType": "primary",
+            "clickType": "add",
+            "ord": "1"
+        },
+        {
+            "_id": "5cc1251f50855d73c48fa813",
+            "modelType": "test4",
+            "name": "编辑",
+            "colorType": "primary",
+            "clickType": "update",
+            "ord": "1"
+        },
+        {
+            "_id": "5cc1251f50855d73c48fa814",
+            "colorType": "primary",
+            "modelType": "test4",
+            "name": "删除",
+            "clickType": "delete",
+            "ord": "3"
+        }
+    ]
+}
+
+3、menuConf
+
+{
+    "result": "ok",
+    "count": 4,
+    "data": [
+        {
+            "_id": "5cb9801b763f4eb14ac26261",
+            "path": "/systemManager",
+            "component": "Layout",
+            "redirect": "/permission/index",
+            "alwaysShow": true,
+            "label": "系统配置",
+            "meta": {
+                "title": "SystemConfig",
+                "icon": "lock"
+            },
+            "children": [
+                {
+                    "path": "/systemManager/accountManage",
+                    "name": "AccountManage",
+                    "component": "/views/accountManage/index",
+                    "label": "账户信息",
+                    "meta": {
+                        "title": "accountManage",
+                        "icon": "form"
+                    },
+                    "menuType": "native"
+                },
+                {
+                    "path": "/systemManager/tableCommomConfig",
+                    "name": "tableCommomConfig",
+                    "component": "/views/tableCommomConfig/index",
+                    "label": "通用配置",
+                    "meta": {
+                        "title": "tableCommomConfig",
+                        "icon": "form"
+                    },
+                    "menuType": "mongo",
+                    "tableName": "test"
+                }
+            ]
+        },
+        {
+            "_id": "5cb9802d763f4eb14ac26262",
+            "path": "/platformMaintenance",
+            "component": "Layout",
+            "redirect": "/permission/index",
+            "alwaysShow": true,
+            "label": "平台维护",
+            "meta": {
+                "title": "develmentManager",
+                "icon": "guide"
+            },
+            "children": [
+                {
+                    "path": "/platformMaintenance/develmentManager",
+                    "name": "develmentManager",
+                    "component": "/views/develmentManager/index",
+                    "label": "元数据管理",
+                    "meta": {
+                        "title": "develmentManager",
+                        "icon": "guide"
+                    },
+                    "menuType": "mongo",
+                    "tableName": "test"
+                }
+            ]
+        },
+        {
+            "_id": "5cb98036763f4eb14ac26263",
+            "path": "/customerManager",
+            "component": "Layout",
+            "redirect": "/permission/index",
+            "alwaysShow": true,
+            "label": "客户信息",
+            "meta": {
+                "title": "customerInfo",
+                "icon": "lock"
+            },
+            "children": [
+                {
+                    "path": "/customerManager/equipmentManage",
+                    "name": "equipmentManage",
+                    "component": "/views/equipmentManage/index",
+                    "label": "设备信息",
+                    "meta": {
+                        "title": "equipmentManage",
+                        "icon": "guide"
+                    },
+                    "menuType": "native"
+                }
+            ]
+        },
+        {
+            "_id": "5cc119cd50855d73c48fa803",
+            "label": "测试模板一",
+            "path": "/modelOne",
+            "component": "Layout",
+            "menuType": "",
+            "tableName": "",
+            "alwaysShow": "1",
+            "meta": {
+                "title": "测试模板一",
+                "icon": "lock"
+            },
+            "children": [
+                {
+                    "label": "测试4",
+                    "path": "/modelOne/test4",
+                    "component": "/views/tableCommomConfig/index",
+                    "menuType": "mongo",
+                    "tableName": "test4",
+                    "meta": {
+                        "title": "测试4",
+                        "icon": "form"
+                    }
+                }
+            ]
+        }
+    ]
+}
