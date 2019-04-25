@@ -50,7 +50,7 @@ export default {
         //table头部按钮数据
         commomButtonData:[],
           updateDisplayParams:{
-           "table":"test","attrs":{}
+           "table":"","attrs":{}
         },
         //复选框选中的数据
         multipleSelection:[],
@@ -88,7 +88,8 @@ export default {
         this.dialogFormParams.table= this.tableName
          this.updateSubmitDisplayParams.table= this.tableName
         this.deleteDisplayParams.table= this.tableName
-
+        this.updateDisplayParams.table= this.tableName
+      
       },   
        //获取table的操作按钮
     getTableButton(){         
@@ -107,7 +108,7 @@ export default {
       if(clickType=='add'){   
         let objNew = JSON.stringify(this.coevrListParams);
         let obj = JSON.parse(objNew);
-        obj.attrs.insert = true
+        obj.attrs.insert = "1"
         getCommonFun(JSON.stringify(obj)).then(res=>{               
                     if(res.data.result=='ok'){              
                         this.coverFormList = res.data.data
@@ -126,7 +127,7 @@ export default {
         }
         let objNew = JSON.stringify(this.coevrListParams);
         let obj = JSON.parse(objNew);
-        obj.attrs.update = true
+        obj.attrs.update = "1"
 
         getCommonFun(JSON.stringify(obj)).then(res=>{               
               if(res.data.result=='ok'){              

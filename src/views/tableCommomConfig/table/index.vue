@@ -26,7 +26,7 @@ export default {
   props:['tableName'],
   data(){
     return{
-        columnParams:{"table":"columnConf","attrs":{"modelType":''}},
+        columnParams:{"table":"baseOptionConf","attrs":{"modelType":'',"table":"1"}},
         tableListParams:{"table":"","attrs":{}},
         tableKey: 0,
         listLoading: true,
