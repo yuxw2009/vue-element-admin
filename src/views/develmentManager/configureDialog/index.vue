@@ -1,6 +1,6 @@
 <template>
     <div class='dialog'>
-        <el-dialog title="配置属性" :visible.sync="setAddVisibles" width="1000px" >
+        <el-dialog title="配置属性" :visible.sync="setAddVisibles" width="1050px" >
             <el-form  label-width="80px">
                 <div class='item'>
                     <el-form-item label="操作配置"></el-form-item>  
@@ -28,6 +28,12 @@
                                 align="center"
                                 prop="name"
                                 label="按钮名称"
+                                width="180">
+                                </el-table-column>
+                                <el-table-column
+                                align="center"
+                                prop="modelType"
+                                label="表名"
                                 width="180">
                                 </el-table-column>
                                 <el-table-column
@@ -89,6 +95,9 @@
         </el-dialog>
          <el-dialog :title="buttonDialogTitle" :visible.sync="buttonVisibles" width="500px" class='buttonDialog'>
                  <el-form  label-width="80px">
+                        <el-form-item  label='表名'>
+                            <el-input  v-model="buttonSubmitData.modelType" size="small"  />
+                        </el-form-item>  
                         <el-form-item  label='按钮名称 '>
                             <el-input  v-model="buttonSubmitData.name" size="small"  />
                         </el-form-item>  
@@ -353,7 +362,7 @@ export default {
                //先删除原有数据
                 let objNew = JSON.stringify(this.delMuliButton);
                 let obj = JSON.parse(objNew);
-                getCommonFun(JSON.stringify(obj)).then(res=>{                              
+                deleteMuliCommonFun(JSON.stringify(obj)).then(res=>{                              
                     if(res.data.result=='ok'){                 
                         // this.menuTableData = res.data.data
                         objNew = JSON.stringify(this.addMuliButton);
@@ -377,7 +386,7 @@ export default {
                //批量添加
                 objNew = JSON.stringify(this.delMuliOptionButton);
                 obj = JSON.parse(objNew);
-                getCommonFun(JSON.stringify(obj)).then(res=>{                              
+                deleteMuliCommonFun(JSON.stringify(obj)).then(res=>{                              
                     if(res.data.result=='ok'){                 
                         // this.menuTableData = res.data.data
                         objNew = JSON.stringify(this.addMuliOptionButton);
@@ -435,6 +444,9 @@ export default {
     .button-cont1{
         text-align:center
     }
+    .el-dialog__body{
+    padding: 10px 20px !important;
+}
 
 
 </style>

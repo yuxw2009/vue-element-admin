@@ -1,8 +1,11 @@
 基础配置：
-1、searchConf（搜索栏配置）
-2、buttonConf（操作栏配置）
-3、columnConf（显示列配置）
+
+1、buttonConf（操作栏配置）
+
+已删除， 1、searchConf（搜索栏配置），使用baseOptionConf
+已删除， 3、columnConf（显示列配置），使用baseOptionConf
 4、baseOptionConf（添加，修改项配置）
+
 5、menuConf（左侧菜单配置）
 
 数据表：

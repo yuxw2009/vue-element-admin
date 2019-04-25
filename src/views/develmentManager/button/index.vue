@@ -3,7 +3,7 @@
         <!-- 头部按钮 -->
         <div class='bottom'>
             <el-button size='mini' v-for='(item,index) in commomButtonData'   :key='index' 
-            class="filter-item" style="margin-left: 10px;" :type="item.colorType" :ord='item.ord'   @click='opneCover(item.clickType,item.name)' >{{item.name}}
+             class="filter-item"  :icon ='item.icon' style="margin-left: 10px;" :type="item.colorType" :ord='item.ord'   @click='opneCover(item.clickType,item.name)' >{{item.name}}
             </el-button> 
         </div>
        <Dialog ref='dialog' :coverFormList='coverFormList' :editData='editData' @formSubmit='formSubmit'  ></Dialog>
@@ -31,11 +31,11 @@ export default {
             fatherSelect:[],
             childSelect:[],
             commomButtonData:[
-                {"modelType":"test","name":"添加","icon":"","colorType":"primary","ord":1,"clickType":'add'},
-                {"modelType":"test","name":"编辑","icon":"","colorType":"primary","ord":2,"clickType":'edit'},
-                {"modelType":"test","name":"删除","icon":"","colorType":"primary","ord":3,"clickType":'del'},
-                {"modelType":"test","name":"添加子菜单","icon":"","colorType":"primary","ord":4,"clickType":'addChildren'},
-                 {"modelType":"test","name":"配置属性","icon":"","colorType":"primary","ord":5,"clickType":'device'}          
+                {"modelType":"test","name":"添加","icon":"el-icon-plus","colorType":"primary","ord":1,"clickType":'add'},
+                {"modelType":"test","name":"编辑","icon":"el-icon-edit","colorType":"primary","ord":2,"clickType":'edit'},
+                {"modelType":"test","name":"删除","icon":"el-icon-delete","colorType":"primary","ord":3,"clickType":'del'},
+                {"modelType":"test","name":"添加子菜单","icon":"el-icon-plus","colorType":"primary","ord":4,"clickType":'addChildren'},
+                 {"modelType":"test","name":"配置属性","icon":"el-icon-zoom-in","colorType":"primary","ord":5,"clickType":'device'}          
             ],
             opt:"",
             editData:{}
@@ -263,6 +263,7 @@ export default {
                             for(let i=0;i<child.length;i++ ){
                                 if(child[i].path==formData.path && child[i].label==formData.label){
                                     delete formData['_id']
+                                    delete formData['alwaysShow']
                                     child[i]=formData;
                                     // flag=i;
                                     break;

@@ -80,8 +80,12 @@ export default {
 </script>
 
 <style scoped>
+.el-dialog{
+    margin-top:0px !important;
+}
 .button-cont{
         text-align: center;
 }
+
 
 </style>

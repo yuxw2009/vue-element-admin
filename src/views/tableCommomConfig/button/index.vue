@@ -3,7 +3,7 @@
         <!--头部按钮 -->
     <div class='bottom'>  
         <el-button size='mini' v-for='(item,index) in commomButtonData'   :key='index' 
-        class="filter-item" style="margin-left: 10px;" :type="item.colorType" :ord='item.ord'   @click='opneCover(item.clickType,item.name)' >{{item.name}}
+        class="filter-item" style="margin-left: 10px;"  :icon ='item.icon' :type="item.colorType" :ord='item.ord'   @click='opneCover(item.clickType,item.name)' >{{item.name}}
         </el-button> 
         </div>
         <!--弹窗 -->
