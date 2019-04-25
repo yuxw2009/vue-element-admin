@@ -135,7 +135,7 @@
      
 </template>
 <script>
-import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun} from '@/api/tableCommom'
+import {getCommonFun,addCommonFun,updateCommonFun,deleteCommonFun,deleteMuliCommonFun,addMultiCommonFun} from '@/api/tableCommom'
 
 export default {
        data(){
@@ -148,14 +148,17 @@ export default {
                buttontableData:[],
                buttomTableParams:{"table":"buttonConf","attrs":{"modelType": ""},"sorts":{"ord":1}},
                optionButtomTableParams:{"table":"baseOptionConf","attrs":{"modelType": ""},"sorts":{"ord":1}},
+               delMuliButton:{"table":"buttonConf","attrs":{"modelType": ""}},
+               delMuliOptionButton:{"table":"baseOptionConf","attrs":{"modelType": ""}},
+               addMuliButton:{"table":"buttonConf","attrs":[]},
+               addMuliOptionButton:{"table":"baseOptionConf","attrs":[]},
                buttontableRowSelect:{},
                buttonSubmitData:{
                     name:'',
                     icon:'',
                     colorType:'',
                     clickType:'',
-                    ord:'',
-
+                    ord:''
                },
                menuTableData:[
                   
@@ -193,6 +196,8 @@ export default {
                console.log(modelType)
                this.buttomTableParams.attrs.modelType=modelType
                this.optionButtomTableParams.attrs.modelType=modelType
+               this.delMuliButton.attrs.modelType=modelType
+               this.delMuliOptionButton.attrs.modelType=modelType
                console.log(this.buttomTableParams,this.optionButtomTableParams)
                this.init()
                this.setAddVisibles = true
@@ -200,8 +205,7 @@ export default {
            buttontableDataChange(selection,row){
                this.buttontableDataSelect = selection
                this.buttontableRowSelect = row
-           },
-            
+           },           
            buttonDialog(title,clickType){
                this.clickType = clickType
                this.buttonSubmitData = {}
@@ -347,16 +351,66 @@ export default {
            },
            successGetData(){
                //先删除原有数据
+                let objNew = JSON.stringify(this.delMuliButton);
+                let obj = JSON.parse(objNew);
+                getCommonFun(JSON.stringify(obj)).then(res=>{                              
+                    if(res.data.result=='ok'){                 
+                        // this.menuTableData = res.data.data
+                        objNew = JSON.stringify(this.addMuliButton);
+                        obj = JSON.parse(objNew);
 
+                        for(let i =0;i<this.buttontableData.length;i++){
+                            if(this.buttontableData[i].hasOwnProperty("_id")){
+                                delete this.buttontableData[i]['_id']
+                            }
+                        }
+
+                        obj.attrs = this.buttontableData;
+                        addMultiCommonFun(JSON.stringify(obj)).then(res=>{                              
+                            if(res.data.result=='ok'){                 
+                                // this.menuTableData = res.data.data
+                                // addMultiCommonFun
+                            }
+                        }) 
+                    }
+                }) 
                //批量添加
+                objNew = JSON.stringify(this.delMuliOptionButton);
+                obj = JSON.parse(objNew);
+                getCommonFun(JSON.stringify(obj)).then(res=>{                              
+                    if(res.data.result=='ok'){                 
+                        // this.menuTableData = res.data.data
+                        objNew = JSON.stringify(this.addMuliOptionButton);
+                        obj = JSON.parse(objNew);
 
+                        for(let i =0;i<this.menuTableData.length;i++){
+                            if(this.menuTableData[i].hasOwnProperty("_id")){
+                                delete this.menuTableData[i]['_id']
+                            }
+                        }
+
+                        obj.attrs = this.menuTableData;
+                        addMultiCommonFun(JSON.stringify(obj)).then(res=>{                              
+                            if(res.data.result=='ok'){                 
+                                // this.menuTableData = res.data.data
+                                // addMultiCommonFun
+
+                                this.setAddVisibles = false;
+                                 this.$message({
+                                        message: '保存成功',
+                                        type: 'warning'
+                                    });
+
+                            }
+                        }) 
+                    }
+                }) 
                
 
                //获取表单数据，保存到数据库
                
 
            }
-
        }
 }
 </script>

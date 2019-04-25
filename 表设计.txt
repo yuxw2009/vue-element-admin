@@ -8,6 +8,20 @@
 数据表：
 1、test（测试表）
 
+表：baseOptionConf
+modelType:模块类别
+prop:字段属性名称
+label：显示名称
+formType input类型：1、text,2、file,3、radio,4、checkbox，5、select等
+defaultValues:默认显示数据（下拉框，其他）
+ord：排序码
+insert:1添加显示，0不显示
+update:1添加显示，0不显示
+search:1添加显示，0不显示
+table:1添加显示，0不显示
+formType input类型：1、text,2、file,3、radio,4、checkbox，5、select等
+defaultValues:默认显示数据（下拉框，其他）
+verification：验证格式（非空，长度，正则，等验证）
 
 
 
@@ -98,7 +112,7 @@
 
 
 修改多条记录
-地址：http://192.168.1.236:3000/deldocument
+地址：http://192.168.1.236:3000/dodocument
 类型：post
 参数：{"table":"test","attrs":{"_id": "5cb81b68763f4eb14ac25621"}}
 

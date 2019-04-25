@@ -150,6 +150,10 @@ menuType：1、通用模板，2、原生接口，3...up
 post  /deldocument
 参数: {table:t,attrs:{"":""}}
 
+5.1 删除多条记录
+post  /delmultidocument
+参数: {table:t,attrs:{"":""}}
+
 5 修改多条记录
 post  /modifymultidocument
 参数: {table:t,attrs:a}
