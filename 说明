@@ -250,11 +250,19 @@ post /upload_ver.yaws
 2 获取版本文件列表
 post api/nhome/get_version_file_list
 conditions:[]
-3  獲取所有設備列表  http://priv.x9water.com:18080/
+3  獲取所有設備列表  http://priv.x9water.com:18080/  10秒钟掉一次
 get api/nhome/get_online_devices_verinfo
 无参数
-返回： {dev_id:d,newest_filename:"文件名",device_type:dt}
+返回： {dev_id:d,newest_filename:"文件名",device_type:dt,"seqno":SeqNoBin,"status":Status,"sendedlen":RecLen}  
+Status:  downloading: 正在下载，停止下载按钮显示出来。 下载按钮隐藏
+         waiting: 等待设备下载，停止下载按钮显示出来。 下载按钮隐藏
+         进度： RecLen/FileSize * 100
+
 4 版本下载接口
 post api/nhome/version/download
 req:      {dev_id:d,ver_filename:"文件名"}
+
+5 停止版本下载接口
+post api/nhome/version/download/stop
+req:      {dev_id:d}
 

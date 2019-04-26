@@ -94,6 +94,8 @@ export default {
 .button-cont{
         text-align: center;
 }
-
+.el-form-item {
+    margin-bottom:20px;
+}
 
 </style>

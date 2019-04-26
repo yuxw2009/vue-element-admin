@@ -81,8 +81,10 @@ const routerMap = {
         import ('@/views/equipmentManage/index'),
     '/views/develmentManager/index': () =>
         import ('@/views/develmentManager/index'),
-    '/views/manager/index': () =>
-        import ('@/views/manager/index')
+    '/views/deviceManager/index': () =>
+        import ('@/views/deviceManager/index'),
+    '/views/textManager/index': () =>
+        import ('@/views/textManager/index')
 
 }
 
