@@ -8,7 +8,6 @@
 
                 <div class='table-cont table-cont2'>
                         <el-table  ref="multipleTable" :data="textTableData" border style="width:100%"  height='500'  @selection-change="handleTextSelectionChange"> 
-                        <el-table-column type="selection" width="55"  align="center">  </el-table-column>
                         <el-table-column prop="device_type" label="设备类型" align="center"> </el-table-column> 
                         <el-table-column prop="name" label="文件类型" align="center"> </el-table-column>      
                         <el-table-column prop="size" label="文件大小" align="center"> </el-table-column>                  
@@ -36,7 +35,7 @@
 
 </template>
 <script>
-import {getDevicesList,getTextList,downloadFile} from '@/api/manager'
+import {getDevicesList,getVerList,downloadFile} from '@/api/manager'
 export default {
     data(){
         return  {
@@ -57,14 +56,15 @@ export default {
     },
     methods:{
         submitUpload() {
-            if(this.fileList.length==0){
-                this.$message({
-                    message: '请选择需要上传的文件',
-                    type: 'error'
-                });
-                return  false;
+            // console.log(this.fileList)
+            // if(this.fileList.length==0){
+            //     this.$message({
+            //         message: '请选择需要上传的文件',
+            //         type: 'error'
+            //     });
+            //     return  false;
 
-            }
+            // }
              this.$refs.upload.submit();
       },
       handleRemove(file, fileList) {
@@ -86,13 +86,13 @@ export default {
                     });
                     this.dialogVisible = false
                     this.fileList = []
+                    this.textTableDataListFun()
 
 
             }
         },
-       
         textTableDataListFun(){         
-             getTextList(JSON.stringify(this.textDataParams)).then(res=>{  
+             getVerList(JSON.stringify(this.textDataParams)).then(res=>{  
                 if(res.data.status=='ok'){
                     this.textTableData = res.data.result
 

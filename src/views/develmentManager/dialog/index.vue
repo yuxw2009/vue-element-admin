@@ -36,14 +36,12 @@ export default {
         editData:{
             handler(n,o){
                 this.dialogSuccessData = this.editData;
-                console.log(this.dialogSuccessData)
                 // console.log(this.coverFormList)
             }
         },
         formLists:{
             handler(n,o){
                 this.formList = this.formLists;
-                console.log(2,this.formList)
                 // console.log(this.coverFormList)
             }
         }

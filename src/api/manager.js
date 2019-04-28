@@ -8,7 +8,7 @@ export function getDevicesList() {
     })
 }
 
-export function getTextList(query) {
+export function getVerList(query) {
     return request({
         // baseURL: 'http://priv.x9water.com:18080',
         url: 'api/nhome/get_version_file_list',
