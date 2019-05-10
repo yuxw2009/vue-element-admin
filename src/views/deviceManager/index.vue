@@ -1,18 +1,17 @@
 <template>
     <div class='cont'>
         <div class='button-cont'>
-             <el-button size='mini'   type="primary" class="filter-item" icon='el-icon-download'  style="margin-left: 10px;" @click="downloadVerDiaog(checkedDevInfos)">版本下载</el-button>      
-        </div>
+            <el-button size='mini'   type="primary" class="filter-item" icon='el-icon-download'  style="margin-left: 10px;" @click="downloadVerDiaog(checkedDevIds)">版本下载</el-button>   
+
+        </div>     
         <div class='table-allCont'>
                 <div class='table-cont'>
-                        <el-table  ref="multipleTable" :data="serverDevInfos" border style="width:1000%" height='500' @selection-change="HandleDeviceSelectionChange">
-                                <el-table-column type="selection" width="55"  align="center">  </el-table-column>
-
+                        <el-table  ref="multipleTableDev" :data="serverDevInfos" border style="width:1000%" height='500' @select="HandleDeviceSelectionChange">
+                                <el-table-column type="selection" width="55"  align="center" >  </el-table-column>
                                 <el-table-column prop="dev_id" label="设备id" align="center"> </el-table-column>
                                 <el-table-column prop="erp_equipmentNO" label="设备编码" align="center"> </el-table-column>  
                                 <el-table-column prop="erp_volume" label="产品类型" align="center"> </el-table-column>             
                                 <el-table-column prop="Ver" label="版本号" align="center"> </el-table-column>    
-                                
                                 <el-table-column  label='下载进度' align="center" width='200'>
                                         <template slot-scope="{row}">   
                                             <el-progress  v-if='IsDownloading(row)' :percentage="getPercent(row)" :stroke-width="14" ></el-progress>                                     
@@ -20,15 +19,15 @@
                                 </el-table-column>  
                                 <el-table-column label="操作" width='200' align="center"> 
                                     <template slot-scope="scope">
-                                        <el-button size="mini"   icon='el-icon-remove-outline' v-if='IsDownloading(scope.row)' class='oneButton' type="danger" @click="handleStop(scope.row,scope.$index)">停止</el-button>
-                                        <el-button size="mini"  v-else  icon=' el-icon-time' class='oneButton' type="primary"  @click="downloadVerDiaog([scope.row])">下载</el-button>             
+                                        <el-button size="mini"   icon='el-icon-remove-outline' v-if='IsDownloading(scope.row)' class='oneButton' type="danger" @click="handleStop(scope.row,scope.$index)">{{getOperationText(scope.row)}}</el-button>
+                                        <el-button size="mini"  v-else  icon=' el-icon-time' class='oneButton' type="primary"  @click="downloadVerDiaog([scope.row])">{{getOperationText(scope.row)}}</el-button>             
                                     </template>     
                                   </el-table-column>              
                         </el-table>
                 </div> 
         </div>
-         <el-dialog title="版本下载"  :visible.sync="dialogVisible"  width="1000px"  height='300' >
-                 <el-table  ref="multipleTable" :data="verTableData" border style="width:100%"  height='500'  @selection-change="handleVerSelectionChange"> 
+         <el-dialog title="版本下载"  :visible.sync="dialogVisible"  width="1000px"  @close='closeFun' height='300' >
+                 <el-table  ref="multipleTableText" :data="verTableData" border style="width:100%"  height='500'  @selection-change="handleVerSelectionChange"> 
                         <el-table-column type="selection" width="55"  align="center">  </el-table-column>
                         <el-table-column prop="device_type" label="设备类型" align="center"> </el-table-column> 
                         <el-table-column prop="name" label="文件类型" align="center"> </el-table-column>      
@@ -39,20 +38,18 @@
                     </div>
 
          </el-dialog>
-              
-
         </div>
-
 </template>
 <script>
 import {getDevicesList,getVerList,downloadFile,stopUpLoad} from '@/api/manager'
+
+var  data = []
 export default {
     data(){
         return  {
             serverDevInfos:[],  
-            checkedDevInfos:[],
-
-
+            checkedDevIds:[],
+            // checkedDevIds:[],
             verTableData:[],
             textDataParams:{
                 conditions:[]
@@ -65,8 +62,9 @@ export default {
              stopUpLoadParams:{dev_id:''},
              sendedlen:'',
              filesize:'',
-           
-        
+             rowsData:[],
+             checkedDev:[]
+         
         }
     },
     created(){
@@ -77,35 +75,61 @@ export default {
         getDevicesListFun(){
             getDevicesList().then(res=>{  
                 if(res.data.status=='ok'){
-                    this.serverDevInfos = res.data.result      
+                    this.serverDevInfos = res.data.result
+                    this.$nextTick(()=>{
+                        this.SetSelection(this.checkedDevIds)
+                    })
             }                   
            }) 
         },
+        SetSelection(rows) {
+            var  _this = this
+            this.$refs.multipleTableDev.clearSelection();
+            if (rows) {
+                rows.forEach(function(row){
+                    var selected=_this.serverDevInfos.find((i)=>i.dev_id==row);
+                    _this.$refs.multipleTableDev.toggleRowSelection(selected);
+                });
+            }else{
+                this.$refs.multipleTableDev.clearSelection();
+            }
+        },
         IsDownloading(Row){
-            return Row.status=="downloading" || Row.status=="waiting";
+            // return Row.status=="downloading" || Row.status=="waiting";
+            return Row.status!="online";
+        },
+        getOperationText(row){
+            if(row.status=='done') return '完成确认'
+            if(row.status=='online') {return '下载'
+            }else{ return '下载'}
         },
         getPercent(row){
-            return row && row.sendedlen && row.sendedlen && row.filesize && row.sendedlen/row.filesize ||0;
+            if(row.status=='done') return 100;
+            return Math.max(row && row.sendedlen && row.sendedlen && row.filesize && parseInt(row.sendedlen/row.filesize*1000)/10 ||0,99.9);
         },
         VerTableDataListFun(){         
              getVerList(JSON.stringify(this.textDataParams)).then(res=>{  
-                 console.log(res)
                 if(res.data.status=='ok'){
                     this.verTableData = res.data.result
                 }                 
             })
         },
-        HandleDeviceSelectionChange(val){
-            this.checkedDevInfos = val
+        HandleDeviceSelectionChange(val,rows){ 
+            this.checkedDevIds = val.map(i=>i.dev_id)
+        },
+        HandleDeviceSelectionChangeAll(val){
+            this.checkedDevIds = val.map(i=>i.dev_id)
         },
         handleVerSelectionChange(val){
             this.verChecked = val
         },
-        downloadVerDiaog(rows){
-            // console.log(rows)
-            if(rows&&rows.length>0){
-                this.checkedDevInfos=rows;
+        downloadVerDiaog(rows){      
+            this.rowsData = rows
+            if(this.rowsData&&this.rowsData.length>0){
+                this.checkedDev=this.rowsData;
                 this.dialogVisible = true;
+                data =  this.checkedDev
+            
                 this.VerTableDataListFun();
             }else{
                 this.$message({
@@ -129,10 +153,7 @@ export default {
                 let obj = JSON.parse(objNew);
                 obj.ver_filename = this.verChecked[0].name
                 
-                // SetVer(this.verChecked[0].size)
-                
-
-                obj.dev_id = this.checkedDevInfos.map(row=>row.dev_id);
+                obj.dev_id = this.checkedDev;
                 downloadFile(obj).then(res=>{
                     if(res.data.status=='ok'){
                         this.dialogVisible = false  
@@ -140,7 +161,6 @@ export default {
                 })
             }
         },
-
         handleStop(row,index){       
             let objNew = JSON.stringify(this.stopUpLoadParams);
                 let obj = JSON.parse(objNew);
@@ -148,6 +168,11 @@ export default {
                 stopUpLoad(JSON.stringify(obj)).then(res=>{
                     this.getDevicesListFun()
                 })
+        },
+
+        closeFun(){
+             this.rowsData  = []
+
         }
         
     

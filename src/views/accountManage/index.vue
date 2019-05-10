@@ -201,15 +201,19 @@ export default {
           listTemp.filters = []
           listTemp.filterkeys = ''
           listTemp.right = element.right
-          element.filters.forEach(item => {
-            const filterTemp = {}
-            filterTemp.key = item.key
-            filterTemp.op = item.op
-            filterTemp.value = item.value
-            listTemp.filterkeys = this.getname(item.key) + '' + listTemp.filterkeys
-            listTemp.filters.push(filterTemp)
-          })
+          if(element.filters){
+               element.filters.forEach(item => {
+                    const filterTemp = {}
+                    filterTemp.key = item.key
+                    filterTemp.op = item.op
+                    filterTemp.value = item.value
+                    listTemp.filterkeys = this.getname(item.key) + '' + listTemp.filterkeys
+                    listTemp.filters.push(filterTemp)
+           })
+
+          }
           this.list.push(listTemp)
+
         })
 
         this.listLoading = false
