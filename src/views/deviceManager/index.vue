@@ -20,7 +20,7 @@
                                 <el-table-column label="操作" width='200' align="center"> 
                                     <template slot-scope="scope">
                                         <el-button size="mini"   icon='el-icon-remove-outline' v-if='IsDownloading(scope.row)' class='oneButton' type="danger" @click="handleStop(scope.row,scope.$index)">{{getOperationText(scope.row)}}</el-button>
-                                        <el-button size="mini"  v-else  icon=' el-icon-time' class='oneButton' type="primary"  @click="downloadVerDiaog([scope.row])">{{getOperationText(scope.row)}}</el-button>             
+                                        <el-button size="mini"  v-else  icon=' el-icon-time' class='oneButton' type="primary"  @click="downloadVerDiaog([scope.row.dev_id])">{{getOperationText(scope.row)}}</el-button>             
                                     </template>     
                                   </el-table-column>              
                         </el-table>
@@ -101,11 +101,11 @@ export default {
         getOperationText(row){
             if(row.status=='done') return '完成确认'
             if(row.status=='online') {return '下载'
-            }else{ return '下载'}
+            }else{ return '停止'}
         },
         getPercent(row){
             if(row.status=='done') return 100;
-            return Math.max(row && row.sendedlen && row.sendedlen && row.filesize && parseInt(row.sendedlen/row.filesize*1000)/10 ||0,99.9);
+            return Math.min(row && row.sendedlen && row.sendedlen && row.filesize && parseInt(row.sendedlen/row.filesize*1000)/10 ||0,99.9);
         },
         VerTableDataListFun(){         
              getVerList(JSON.stringify(this.textDataParams)).then(res=>{  
@@ -156,6 +156,7 @@ export default {
                 obj.dev_id = this.checkedDev;
                 downloadFile(obj).then(res=>{
                     if(res.data.status=='ok'){
+                        this.getDevicesListFun()
                         this.dialogVisible = false  
                     }
                 })
