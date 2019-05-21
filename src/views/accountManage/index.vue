@@ -250,6 +250,7 @@ export default {
       this.accountAddVisible = true
     },
     handleFilters(index, row) { //
+
       this.add = true;
       this.accountTemp.username = row.username
       this.accountTemp.filters = row.filters
@@ -305,6 +306,8 @@ export default {
     
     // 点击菜单权限设置动态渲染
     handleMenu(index, row) {
+      console.log(11111)
+     
        Array.prototype.removeByValue = function(val) {
       for(var i = 0; i < this.length; i++) {
         if(this[i] == val) {
@@ -357,7 +360,6 @@ export default {
     },
     // 新增账号提交
     dialogSubmit() { //
-      this.treeNode()
       const accountSended = {
         username: ['new_oam', this.accountTemp.username],
         password: this.accountTemp.password,

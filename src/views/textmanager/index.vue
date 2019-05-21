@@ -18,7 +18,7 @@
                 <el-upload
                     class="upload-demo"
                     ref="upload"
-                    action="http://priv.x9water.com:18080/upload_ver.yaws"
+                    :action= "verUploadUrl"
                     :on-preview="handlePreview"
                     :on-remove="handleRemove"
                     :file-list="fileList"
@@ -47,6 +47,7 @@ export default {
              fileList:[],
              textChecked:[],
              textDataParams:{dev_id:'',ver_filename:""},
+             verUploadUrl:process.env.BASE_API+'upload_ver.yaws',
         }
     },
     created(){

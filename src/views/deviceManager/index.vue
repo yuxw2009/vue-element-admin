@@ -69,7 +69,7 @@ export default {
     },
     created(){
         this.getDevicesListFun();
-        setInterval(()=>{this.getDevicesListFun();},10000);
+        setInterval(()=>{this.getDevicesListFun();},1000*60);
     },
     methods:{    
         getDevicesListFun(){
