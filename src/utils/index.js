@@ -296,3 +296,9 @@ export function createUniqueString() {
   const randomNum = parseInt((1 + Math.random()) * 65536) + ''
   return (+(randomNum + timestamp)).toString(32)
 }
+
+export function getObjectValues(object) {
+  var values = []
+  for (var property in object) { values.push(object[property]) }
+  return values
+}

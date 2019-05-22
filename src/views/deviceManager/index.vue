@@ -7,20 +7,27 @@
     <div class="table-allCont">
       <div class="table-cont">
         <el-form id="box" :inline="true" class="demo-form-inline">
-          <el-form-item label="设备id">
-            <el-input v-model="conditions.conditions[1][2]" size="small" placeholder="设备id" />
+          <el-form-item label="SIM卡号">
+            <el-input v-model="conditions.conditions.dev_id[2]" size="small" placeholder="SIM卡号" />
           </el-form-item>
-          <el-form-item label="设备编码">
-            <el-input v-model="conditions.conditions[0][2]" size="small" placeholder="设备编码" />
+          <el-form-item label="设备编号">
+            <el-input v-model="conditions.conditions.erp_equipmentNO[2]" size="small" placeholder="设备编号" />
           </el-form-item>
 
           <el-form-item label="产品类型">
-            <el-input v-model="conditions.conditions[3][2]" size="small" placeholder="产品类型" />
+            <el-input v-model="conditions.conditions.erp_volume[2]" size="small" placeholder="产品类型" />
+          </el-form-item>
+          <el-form-item label="客户名称">
+            <el-input v-model="conditions.conditions.erp_customerName[2]" size="small" placeholder="客户名称" />
           </el-form-item>
 
-          <el-form-item label="版本号">
-            <el-input v-model="conditions.conditions[2][2]" size="small" placeholder="版本号" />
+          <el-form-item label="安装地址">
+            <el-input v-model="conditions.conditions.erp_address[2]" size="small" placeholder="安装地址" />
           </el-form-item>
+          <el-form-item label="版本号">
+            <el-input v-model="conditions.conditions.Ver[2]" size="small" placeholder="版本号" />
+          </el-form-item>
+
           <!-- <el-form-item label="状态">
                                 <el-select v-model="conditions.Ver" size="small" placeholder="下载中" />
                             </el-form-item> -->
@@ -30,9 +37,11 @@
         </el-form>
         <el-table ref="multipleTableDev" :data="serverDevInfos" border style="width:1000%" height="500" @select="HandleDeviceSelectionChange">
           <el-table-column type="selection" width="55" align="center" />
-          <el-table-column prop="dev_id" label="设备id" align="center" />
-          <el-table-column prop="erp_equipmentNO" label="设备编码" align="center" />
+          <el-table-column prop="dev_id" label="SIM卡号" align="center" />
+          <el-table-column prop="erp_equipmentNO" label="设备编号" align="center" />
           <el-table-column prop="erp_volume" label="产品类型" align="center" />
+          <el-table-column prop="erp_customerName" label="客户名称" align="center" />
+          <el-table-column prop="erp_address" label="安装地址" align="center" />
           <el-table-column prop="Ver" label="版本号" align="center" />
           <el-table-column label="下载进度" align="center" width="200">
             <template slot-scope="{row}">
@@ -74,25 +83,27 @@
 </template>
 <script>
 import { getDevicesList, getVerList, downloadFile, stopUpLoad } from '@/api/manager'
+import { getObjectValues } from '@/utils'
 
 // var data = []
 export default {
   data() {
     return {
-      // conditions:{"DId":'',"erp_equipmentNO":'',"erp_volume":'',"Ver":''},
       pages: {
         offset: 1,
         limit: 10
       },
       conditions: {
-        page_num: 10000,
+        page_num: 10,
         curpage: 1,
-        conditions: [
-          ['erp_equipmentNO', 'like', ''],
-          ['DId', 'like', ''],
-          ['Ver', 'like', ''],
-          ['erp_volume', 'like', '']
-        ]
+        conditions: {
+          'erp_equipmentNO': ['erp_equipmentNO', 'like', ''],
+          'dev_id': ['dev_id', 'like', ''],
+          'Ver': ['Ver', 'like', ''],
+          'erp_volume': ['erp_volume', 'like', ''],
+          'erp_address': ['erp_address', 'like', ''],
+          'erp_customerName': ['erp_customerName', 'like', '']
+        }
       },
       serverDevInfos: [],
       checkedDevIds: [],
@@ -119,7 +130,7 @@ export default {
     }
   },
   created() {
-    // this.getDevicesListFun();
+    this.getDevicesListFun({ page_num: this.conditions.page_num, curpage: this.conditions.curpage, conditions: getObjectValues(this.conditions.conditions) })
     // setInterval(()=>{this.getDevicesListFun();},1000*60);
   },
   methods: {
@@ -127,7 +138,7 @@ export default {
       getDevicesList(conditions).then(res => {
         if (res.data.status === 'ok') {
           this.serverDevInfos = JSON.parse(res.data.result.result)
-          console.log(this.serverDevInfos)
+          // console.log(this.serverDevInfos)
           this.pagination.total = res.data.result.count
           // console.log(1, this.serverDevInfos)
           this.$nextTick(() => {
@@ -211,7 +222,7 @@ export default {
         obj.dev_id = this.checkedDev
         downloadFile(obj).then(res => {
           if (res.data.status === 'ok') {
-            this.getDevicesListFun()
+            this.getDevicesListFun() //
             this.dialogVisible = false
           }
         })
@@ -222,7 +233,7 @@ export default {
       const obj = JSON.parse(objNew)
       obj.dev_id = row.dev_id
       stopUpLoad(JSON.stringify(obj)).then(res => {
-        this.getDevicesListFun()
+        this.getDevicesListFun() //
       })
     },
 
@@ -230,20 +241,15 @@ export default {
       this.rowsData = []
     },
     onSubmit() {
-      // let Conditions=[];
-      // for (var k in this.conditions){
-      //     if(this.conditions[k]) Conditions.push([k,"like",this.conditions[k]]);
-      // }
-
-      this.getDevicesListFun(this.conditions)
+      this.getDevicesListFun({ page_num: this.conditions.page_num, curpage: this.conditions.curpage, conditions: getObjectValues(this.conditions.conditions) })
     },
     handleSizeChange(limit) {
-      this.pages.limit = limit
-      this.getDevicesListFun()
+      this.getDevicesListFun({ page_num: limit, curpage: this.conditions.curpage, conditions: getObjectValues(this.conditions.conditions) })
     },
     handleCurrentChange(offset) {
-      this.pages.offset = offset
-      this.getDevicesListFun()
+      // console.log(offset);
+
+      this.getDevicesListFun({ page_num: this.conditions.page_num, curpage: offset, conditions: getObjectValues(this.conditions.conditions) })
     }
 
   }
